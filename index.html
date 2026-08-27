@@ -1,0 +1,4317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>애니메이션 D-Day 알람 스튜디오 (Animated D-Day Alarm Studio)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Google Fonts for Skin Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Gowun+Dodum&family=Jua&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['var(--app-font)', 'Noto Sans KR', 'sans-serif'],
+            display: ['Outfit', 'Noto Sans KR', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================
+       THEME SKIN SYSTEM (CSS Variables & Background Textures)
+       ========================================================== */
+    :root {
+      --app-font: 'Noto Sans KR', sans-serif;
+      --bg-body: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.85);
+      --bg-card-inner: rgba(15, 23, 42, 0.6);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+      --border-main: #334155;
+      --card-radius: 1.25rem;
+      --border-style: solid;
+      --border-width: 1px;
+      --shadow-style: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+      --header-bg: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+    }
+
+    /* 1. ✨ 모던 베이직 (Modern Basic) */
+    body.theme-modern {
+      --app-font: 'Noto Sans KR', sans-serif;
+      --bg-body: #090d16;
+      --bg-surface: #111827;
+      --bg-card: rgba(17, 24, 39, 0.9);
+      --bg-card-inner: rgba(10, 15, 29, 0.7);
+      --text-main: #f9fafb;
+      --text-sub: #9ca3af;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-glow: rgba(99, 102, 241, 0.4);
+      --border-main: rgba(255, 255, 255, 0.1);
+      --card-radius: 1.25rem;
+      --border-style: solid;
+      --border-width: 1px;
+      --shadow-style: 0 20px 35px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.15);
+      --header-bg: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      background-color: var(--bg-body);
+      background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 60%);
+    }
+
+    /* 2. 🧱 레고 블록 (Lego Style) */
+    body.theme-lego {
+      --app-font: 'Jua', cursive, sans-serif;
+      --bg-body: #f59e0b;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-inner: #fef3c7;
+      --text-main: #1f2937;
+      --text-sub: #4b5563;
+      --accent: #ef4444;
+      --accent-hover: #dc2626;
+      --accent-glow: rgba(239, 68, 68, 0.4);
+      --border-main: #1f2937;
+      --card-radius: 0.75rem;
+      --border-style: solid;
+      --border-width: 3.5px;
+      --shadow-style: 6px 6px 0px #1f2937;
+      --header-bg: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      background-color: #f59e0b;
+      background-image: radial-gradient(#d97706 20%, transparent 20%), radial-gradient(#d97706 20%, transparent 20%);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* 3. 🧸 봉제 인형 (Plushie Style) */
+    body.theme-plushie {
+      --app-font: 'Gowun Dodum', sans-serif;
+      --bg-body: #fce7f3;
+      --bg-surface: #fff1f2;
+      --bg-card: #ffffff;
+      --bg-card-inner: #fdf2f8;
+      --text-main: #701a75;
+      --text-sub: #a21caf;
+      --accent: #ec4899;
+      --accent-hover: #db2777;
+      --accent-glow: rgba(236, 72, 153, 0.35);
+      --border-main: #f472b6;
+      --card-radius: 1.75rem;
+      --border-style: dashed;
+      --border-width: 2.5px;
+      --shadow-style: 0 10px 25px -5px rgba(244, 114, 182, 0.3);
+      --header-bg: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+      background-color: #fce7f3;
+      background-image: radial-gradient(#fbcfe8 25%, transparent 25%), radial-gradient(#fbcfe8 25%, transparent 25%);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+
+    /* 4. 💼 가죽 가방 (Leather Style) */
+    body.theme-leather {
+      --app-font: 'Noto Sans KR', serif;
+      --bg-body: #291b12;
+      --bg-surface: #3b281a;
+      --bg-card: #4a3322;
+      --bg-card-inner: #302014;
+      --text-main: #fef3c7;
+      --text-sub: #d97706;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --accent-glow: rgba(245, 158, 11, 0.4);
+      --border-main: #78350f;
+      --card-radius: 1rem;
+      --border-style: dashed;
+      --border-width: 2px;
+      --shadow-style: 0 12px 28px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --header-bg: linear-gradient(135deg, #573117 0%, #302014 100%);
+      background-color: #291b12;
+      background-image: repeating-linear-gradient(45deg, #24160e 0, #24160e 15px, #291b12 15px, #291b12 30px);
+    }
+
+    /* 5. 🎨 유화 화폭 (Oil Painting Style) */
+    body.theme-oil {
+      --app-font: 'Gamja Flower', cursive;
+      --bg-body: #0b132b;
+      --bg-surface: #1c2541;
+      --bg-card: #1c2541;
+      --bg-card-inner: #0b132b;
+      --text-main: #fef08a;
+      --text-sub: #93c5fd;
+      --accent: #eab308;
+      --accent-hover: #ca8a04;
+      --accent-glow: rgba(234, 179, 8, 0.45);
+      --border-main: #ca8a04;
+      --card-radius: 1.25rem;
+      --border-style: double;
+      --border-width: 4px;
+      --shadow-style: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(234, 179, 8, 0.2);
+      --header-bg: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      background-color: #0b132b;
+      background-image: radial-gradient(#1e3a8a 15%, transparent 16%), radial-gradient(#3b82f6 15%, transparent 16%);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+
+    /* 6. 🖌️ 수채화 페이퍼 (Watercolor Style) */
+    body.theme-watercolor {
+      --app-font: 'Nanum Pen Script', cursive;
+      --bg-body: #ecfdf5;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-inner: #f0fdf4;
+      --text-main: #064e3b;
+      --text-sub: #047857;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-glow: rgba(16, 185, 129, 0.35);
+      --border-main: #6ee7b7;
+      --card-radius: 1.5rem;
+      --border-style: solid;
+      --border-width: 2px;
+      --shadow-style: 0 12px 30px rgba(16, 185, 129, 0.18);
+      --header-bg: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      background-color: #ecfdf5;
+      background-image: radial-gradient(circle at 20% 30%, #ccfbf1 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, #d1fae5 0%, transparent 50%);
+    }
+
+    /* Base theme element mapping */
+    body {
+      font-family: var(--app-font);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .themed-card {
+      background: var(--bg-card);
+      border: var(--border-width) var(--border-style) var(--border-main);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-style);
+      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .themed-inner {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-main);
+      border-radius: calc(var(--card-radius) * 0.7);
+    }
+
+    .themed-btn-primary {
+      background-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s ease;
+    }
+    .themed-btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .themed-border {
+      border-color: var(--border-main);
+    }
+
+    .themed-subtext {
+      color: var(--text-sub);
+    }
+
+    .themed-accent-text {
+      color: var(--accent);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    /* Pulse & Float Keyframes */
+    @keyframes gentle-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+    .animate-gentle-pulse {
+      animation: gentle-pulse 2.5s infinite ease-in-out;
+    }
+
+    @keyframes ring-shake {
+      0%, 100% { transform: rotate(0deg); }
+      15% { transform: rotate(-15deg); }
+      30% { transform: rotate(15deg); }
+      45% { transform: rotate(-10deg); }
+      60% { transform: rotate(10deg); }
+      75% { transform: rotate(-5deg); }
+      90% { transform: rotate(5deg); }
+    }
+    .animate-ring-shake {
+      animation: ring-shake 0.6s infinite ease-in-out;
+    }
+
+    /* Canvas Frame */
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      border-radius: calc(var(--card-radius) * 0.8);
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.3) 100%);
+    }
+
+    /* Nav tab active styling */
+    .nav-tab.active {
+      background-color: var(--accent);
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    /* Stage step highlight */
+    .stage-step.active {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.15);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="theme-modern antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ==========================================================
+       MAIN APP CONTAINER
+       ========================================================== -->
+  <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6">
+
+    <!-- HEADER BAR -->
+    <header class="themed-card p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5 text-center md:text-left">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg transition-transform hover:scale-105"
+             style="background: var(--header-bg); border: 2px solid var(--border-main);">
+          <i class="fa-solid fa-stopwatch-20 text-yellow-400"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-2 justify-center md:justify-start">
+            <span>애니메이션 D-Day 알람 스튜디오</span>
+            <span class="text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" 
+                  style="background: var(--accent); color: #fff;">PRO</span>
+          </h1>
+          <p class="text-xs sm:text-sm themed-subtext mt-0.5">
+            목표를 향한 설레는 여정, 1~5단계 실시간 캔버스 애니메이션 카운트다운
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls: Skin Selector & Gemini API Settings -->
+      <div class="flex items-center gap-2.5 flex-wrap justify-center">
+        <!-- Skin Selector -->
+        <div class="flex items-center gap-2 themed-inner px-3 py-1.5 shadow-sm">
+          <i class="fa-solid fa-palette text-sm themed-accent-text"></i>
+          <label for="themeSkinSelect" class="text-xs font-semibold hidden sm:inline">스킨:</label>
+          <select id="themeSkinSelect" onchange="changeTheme(this.value)" 
+                  class="bg-transparent text-xs font-bold focus:outline-none cursor-pointer pr-1">
+            <option value="modern" class="bg-gray-800 text-white">✨ 모던 베이직</option>
+            <option value="lego" class="bg-amber-500 text-gray-900">🧱 레고 블록</option>
+            <option value="plushie" class="bg-pink-300 text-pink-900">🧸 봉제 인형</option>
+            <option value="leather" class="bg-amber-900 text-amber-100">💼 가죽 가방</option>
+            <option value="oil" class="bg-slate-900 text-yellow-300">🎨 유화 화폭</option>
+            <option value="watercolor" class="bg-emerald-100 text-emerald-900">🖌️ 수채화 페이퍼</option>
+          </select>
+        </div>
+
+        <!-- Gemini API Key Button -->
+        <button onclick="openApiKeyModal()" 
+                title="Google Gemini API 키 설정"
+                class="px-3 py-1.5 text-xs font-medium rounded-lg themed-inner hover:opacity-90 flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-key text-yellow-400"></i>
+          <span class="hidden sm:inline">API 설정</span>
+          <span id="apiKeyStatusDot" class="w-2 h-2 rounded-full bg-red-400"></span>
+        </button>
+
+        <!-- Sound Audio Enable Helper -->
+        <button id="audioToggleBtn" onclick="toggleAudioMute()" 
+                title="오디오 토글"
+                class="px-3 py-1.5 text-xs font-medium rounded-lg themed-inner hover:opacity-90 flex items-center gap-1.5">
+          <i id="audioIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+          <span class="hidden sm:inline text-xs">사운드 ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="flex items-center justify-between p-1.5 themed-card gap-1 sm:gap-2">
+      <button onclick="switchTab('active')" id="tabBtn-active"
+              class="nav-tab active flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all">
+        <i class="fa-solid fa-hourglass-half"></i>
+        <span>현재 활성 알람</span>
+      </button>
+      <button onclick="switchTab('create')" id="tabBtn-create"
+              class="nav-tab flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold themed-subtext hover:themed-accent-text flex items-center justify-center gap-2 transition-all">
+        <i class="fa-solid fa-plus-circle"></i>
+        <span>새 알람 등록</span>
+      </button>
+      <button onclick="switchTab('history')" id="tabBtn-history"
+              class="nav-tab flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold themed-subtext hover:themed-accent-text flex items-center justify-center gap-2 transition-all">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span>히스토리</span>
+        <span id="historyCountBadge" class="text-[11px] px-1.5 py-0.2 rounded-full font-bold bg-white/20">0</span>
+      </button>
+      <button onclick="switchTab('ai-studio')" id="tabBtn-ai-studio"
+              class="nav-tab flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold themed-subtext hover:themed-accent-text flex items-center justify-center gap-2 transition-all">
+        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+        <span>AI 스튜디오</span>
+      </button>
+    </nav>
+
+    <!-- ==========================================================
+         TAB 1: 현재 활성 알람 (MAIN VIEW)
+         ========================================================== -->
+    <section id="view-active" class="space-y-6">
+
+      <!-- Active Alarm Stage Card -->
+      <div class="themed-card p-5 sm:p-7 relative overflow-hidden">
+        
+        <!-- Header Info within Stage -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b themed-border pb-4 mb-5">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="alarmCategoryTag" class="px-2.5 py-0.5 text-xs font-extrabold rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                🎉 기념일/이벤트
+              </span>
+              <span id="alarmThemeBadge" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-slate-700/60 text-slate-300">
+                🌸 꽃밭과 만발한 꽃다발
+              </span>
+            </div>
+            <h2 id="alarmTitleDisplay" class="text-xl sm:text-2xl font-black tracking-tight text-white mt-1">
+              우리 100일 기념일 축하파티
+            </h2>
+            <p id="alarmMemoDisplay" class="text-xs sm:text-sm themed-subtext italic">
+              "서로에게 감사하며 맛있는 저녁 먹기!"
+            </p>
+          </div>
+
+          <!-- Target Date & Remaining Time Banner -->
+          <div class="text-right sm:text-right w-full sm:w-auto themed-inner p-3 px-4 relative group">
+            <div class="text-[11px] themed-subtext font-medium flex items-center justify-end gap-1.5 flex-wrap">
+              <i class="fa-regular fa-calendar-check text-indigo-400"></i>
+              <span>목표 일시:</span>
+              <span id="alarmTargetDateDisplay" class="font-bold text-white">2026.09.01 18:00</span>
+              <button onclick="openEditActiveAlarmModal()" 
+                      class="px-2 py-0.5 ml-1 rounded-md bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/40 text-[10px] font-bold border border-indigo-500/30 transition-all inline-flex items-center gap-1 shadow-sm"
+                      title="종료 시점 및 알람 수정">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>일시 변경</span>
+              </button>
+            </div>
+            <div id="ddayTimerDisplay" class="text-2xl sm:text-3xl font-black tracking-wider text-emerald-400 font-display mt-0.5">
+              D-05일 07:23:45
+            </div>
+          </div>
+        </div>
+
+        <!-- 280px+ Realtime HTML5 Canvas Stage -->
+        <div class="canvas-container shadow-inner mb-5 relative group" id="canvasWrapper">
+          <canvas id="stageCanvas" class="w-full h-full block"></canvas>
+          
+          <!-- Stage Overlay Floating Indicator -->
+          <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 border border-white/10 text-white z-10">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="canvasStageBadge">현재: 3단계 (봉오리 단계)</span>
+          </div>
+
+          <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-extrabold text-amber-300 border border-white/10 z-10">
+            <span id="canvasProgressBadge">진척도: 58.4%</span>
+          </div>
+
+          <!-- Interactive Fullscreen/Reset View Overlay Button -->
+          <div class="absolute bottom-3 right-3 flex items-center gap-1.5 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+            <button onclick="triggerConfetti()" title="축하 폭죽 효과"
+                    class="p-2 rounded-lg bg-black/50 hover:bg-black/80 text-white text-xs border border-white/10 backdrop-blur-sm">
+              <i class="fa-solid fa-wand-magic-sparkles text-yellow-300"></i>
+            </button>
+          </div>
+
+          <!-- 5-Stage Celebration Mode Interactive Glassmorphism Overlay -->
+          <div id="canvasCelebrationOverlay" 
+               class="absolute inset-x-2 bottom-2 sm:inset-x-4 sm:bottom-3 z-20 hidden transition-all duration-500 ease-out transform translate-y-2">
+            <div class="p-3.5 sm:p-4 rounded-2xl bg-black/80 backdrop-blur-xl border-2 border-amber-400 shadow-[0_10px_35px_rgba(234,179,8,0.35)] text-white space-y-2.5">
+              
+              <!-- Celebration Header Badge & Title -->
+              <div class="flex items-start justify-between gap-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-2xl sm:text-3xl shadow-lg flex-shrink-0">
+                    <span id="celebBadgeIcon">🏆</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[10px] sm:text-xs font-black tracking-wider uppercase">
+                        ★ D-DAY 완주 성공 ★
+                      </span>
+                      <span class="text-[10px] font-bold text-emerald-400 animate-pulse hidden sm:inline">
+                        <i class="fa-solid fa-sparkles"></i> 5단계 완성 축하 모드
+                      </span>
+                    </div>
+                    <h3 id="celebTitleDisplay" class="text-sm sm:text-base font-black tracking-tight text-white mt-0.5 line-clamp-1">
+                      우리 100일 기념일 축하파티
+                    </h3>
+                  </div>
+                </div>
+
+                <button type="button" onclick="triggerConfetti()" 
+                        class="p-2 rounded-xl bg-amber-400/20 text-amber-300 hover:bg-amber-400/40 text-xs font-bold border border-amber-400/30 flex items-center gap-1.5 shadow-sm flex-shrink-0 transition-transform active:scale-95"
+                        title="폭죽 터뜨리기">
+                  <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                  <span class="hidden sm:inline">폭죽 팡파레</span>
+                </button>
+              </div>
+
+              <!-- Stage 5 Description & Memo -->
+              <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                <div class="flex items-center gap-2 text-xs font-bold text-yellow-300">
+                  <i class="fa-solid fa-award"></i>
+                  <span id="celebStageDescDisplay">만발한 꽃밭과 아름다운 꽃다발 완성!</span>
+                </div>
+                <div id="celebMemoDisplay" class="text-[11px] themed-subtext italic line-clamp-1">
+                  "서로에게 감사하며 맛있는 저녁 먹기!"
+                </div>
+              </div>
+
+              <!-- Interactive Action Buttons -->
+              <div class="flex items-center justify-between gap-2 pt-0.5 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="snoozeAlarm(5)" 
+                          class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-all border border-white/10">
+                    <i class="fa-solid fa-clock text-blue-400"></i>
+                    <span>5분 연기</span>
+                  </button>
+                  <button type="button" onclick="triggerConfettiParticles(50)" 
+                          class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-all border border-white/10">
+                    <i class="fa-solid fa-fire-flame-curved text-pink-400"></i>
+                    <span>폭죽 더 쏘기</span>
+                  </button>
+                </div>
+
+                <button type="button" onclick="openCompletionDialogFromCelebration()" 
+                        class="py-2 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 hover:from-amber-600 hover:to-pink-600 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-lg transition-all active:scale-95 ml-auto">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>🎉 목표 달성 완료하기</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Stage Step Bar & Realtime Progress Slider -->
+        <div class="space-y-4 mb-6">
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-bars-progress themed-accent-text"></i>
+              <span>D-Day 목표 달성률</span>
+            </span>
+            <span id="progressTextPercent" class="text-sm font-black themed-accent-text">58.4%</span>
+          </div>
+
+          <!-- Animated Progress Bar -->
+          <div class="w-full h-4 bg-black/40 rounded-full p-0.5 overflow-hidden border themed-border">
+            <div id="alarmProgressBar" 
+                 class="h-full rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-1"
+                 style="width: 58.4%; background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);">
+              <div class="w-2 h-2 rounded-full bg-white shadow-md animate-pulse"></div>
+            </div>
+          </div>
+
+          <!-- 5 Stage Step Cards Grid -->
+          <div class="grid grid-cols-5 gap-1.5 sm:gap-2 pt-1" id="stageCardsContainer">
+            <!-- Stage 1 -->
+            <div class="stage-step p-2 rounded-xl text-center border themed-border themed-inner transition-all" data-stage="1">
+              <div class="text-lg sm:text-xl stage-icon">🌱</div>
+              <div class="text-[10px] sm:text-xs font-extrabold mt-0.5">1단계</div>
+              <div class="text-[9px] sm:text-[10px] themed-subtext truncate stage-desc">씨앗/기초</div>
+              <div class="text-[8px] opacity-60 font-mono mt-0.5">0~24%</div>
+            </div>
+            <!-- Stage 2 -->
+            <div class="stage-step p-2 rounded-xl text-center border themed-border themed-inner transition-all" data-stage="2">
+              <div class="text-lg sm:text-xl stage-icon">🌿</div>
+              <div class="text-[10px] sm:text-xs font-extrabold mt-0.5">2단계</div>
+              <div class="text-[9px] sm:text-[10px] themed-subtext truncate stage-desc">새싹/조립</div>
+              <div class="text-[8px] opacity-60 font-mono mt-0.5">25~49%</div>
+            </div>
+            <!-- Stage 3 -->
+            <div class="stage-step active p-2 rounded-xl text-center border themed-border themed-inner transition-all" data-stage="3">
+              <div class="text-lg sm:text-xl stage-icon">🌷</div>
+              <div class="text-[10px] sm:text-xs font-extrabold mt-0.5 text-indigo-400">3단계</div>
+              <div class="text-[9px] sm:text-[10px] themed-subtext truncate stage-desc">봉오리/점화</div>
+              <div class="text-[8px] opacity-60 font-mono mt-0.5">50~74%</div>
+            </div>
+            <!-- Stage 4 -->
+            <div class="stage-step p-2 rounded-xl text-center border themed-border themed-inner transition-all" data-stage="4">
+              <div class="text-lg sm:text-xl stage-icon">🌺</div>
+              <div class="text-[10px] sm:text-xs font-extrabold mt-0.5">4단계</div>
+              <div class="text-[9px] sm:text-[10px] themed-subtext truncate stage-desc">개화/대기권</div>
+              <div class="text-[8px] opacity-60 font-mono mt-0.5">75~99%</div>
+            </div>
+            <!-- Stage 5 -->
+            <div class="stage-step p-2 rounded-xl text-center border themed-border themed-inner transition-all" data-stage="5">
+              <div class="text-lg sm:text-xl stage-icon">💐</div>
+              <div class="text-[10px] sm:text-xs font-extrabold mt-0.5">5단계</div>
+              <div class="text-[9px] sm:text-[10px] themed-subtext truncate stage-desc">D-Day 완성!</div>
+              <div class="text-[8px] opacity-60 font-mono mt-0.5">100%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Simulation & Action Buttons -->
+        <div class="border-t themed-border pt-5 grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+          <!-- Button 1: 목표 일시 / 종료시점 수정 (NEW) -->
+          <button onclick="openEditActiveAlarmModal()" 
+                  class="p-3 rounded-xl themed-inner hover:border-indigo-500 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-all group border-indigo-500/40 bg-indigo-500/5">
+            <i class="fa-solid fa-pen-to-square text-indigo-400 group-hover:scale-110 transition-transform"></i>
+            <span>목표 일시 수정</span>
+            <span class="text-[10px] themed-subtext font-normal">종료일시·설정 변경</span>
+          </button>
+
+          <!-- Button 2: 진척도 20% 늘리기 -->
+          <button onclick="boostProgress(20)" 
+                  class="p-3 rounded-xl themed-inner hover:border-indigo-500 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-all group">
+            <i class="fa-solid fa-forward-step text-indigo-400 group-hover:scale-110 transition-transform"></i>
+            <span>진척도 20% 늘리기</span>
+            <span class="text-[10px] themed-subtext font-normal">빠른 단계 변화 테스트</span>
+          </button>
+
+          <!-- Button 3: 알람 울림 시연 -->
+          <button onclick="testTriggerAlarm()" 
+                  class="p-3 rounded-xl themed-inner hover:border-amber-500 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-all group">
+            <i class="fa-solid fa-bell text-amber-400 group-hover:animate-ring-shake"></i>
+            <span>알람 울림 시연</span>
+            <span class="text-[10px] themed-subtext font-normal">도달 팝업 & 사운드</span>
+          </button>
+
+          <!-- Button 4: 5분 스누즈 -->
+          <button onclick="snoozeAlarm(5)" 
+                  class="p-3 rounded-xl themed-inner hover:border-blue-500 font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-all group">
+            <i class="fa-solid fa-clock text-blue-400 group-hover:rotate-45 transition-transform"></i>
+            <span>5분 스누즈</span>
+            <span class="text-[10px] themed-subtext font-normal">목표 시간 +5분 연기</span>
+          </button>
+
+          <!-- Button 5: 알람 완료 및 리셋 -->
+          <button onclick="completeAndResetAlarm()" 
+                  class="p-3 rounded-xl themed-btn-primary font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-all col-span-2 sm:col-span-1">
+            <i class="fa-solid fa-circle-check text-white"></i>
+            <span>알람 완료 & 리셋</span>
+            <span class="text-[10px] text-white/80 font-normal">히스토리 저장 & 재설정</span>
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         TAB 2: 새 알람 등록 및 AI 테마 연동
+         ========================================================== -->
+    <section id="view-create" class="hidden space-y-6">
+      <div class="themed-card p-6 sm:p-8">
+        
+        <div class="flex items-center justify-between border-b themed-border pb-4 mb-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+              <i class="fa-solid fa-calendar-plus text-indigo-400"></i>
+              <span>새로운 D-Day 알람 등록</span>
+            </h2>
+            <p class="text-xs sm:text-sm themed-subtext mt-0.5">
+              목표 일자와 애니메이션 테마를 선택하여 몰입감 넘치는 알람을 만드세요.
+            </p>
+          </div>
+        </div>
+
+        <form id="newAlarmForm" onsubmit="handleCreateAlarm(event)" class="space-y-6">
+          
+          <!-- 1. Alarm Title & Category -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                알람 제목 <span class="text-red-400">*</span>
+              </label>
+              <input type="text" id="formTitle" required
+                     placeholder="예: 우리 100일 기념일, 정보처리기사 시험, 바디프로필 D-Day"
+                     class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm">
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                카테고리 <span class="text-red-400">*</span>
+              </label>
+              <select id="formCategory" required
+                      class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm cursor-pointer">
+                <option value="기념일/이벤트" class="bg-gray-800">🎉 기념일 / 이벤트</option>
+                <option value="목표/시험" class="bg-gray-800">🎯 목표 / 시험</option>
+                <option value="당일 일정/약속" class="bg-gray-800">⏰ 당일 일정 / 약속</option>
+                <option value="운동/습관 형성" class="bg-gray-800">🏃 운동 / 습관 형성</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. Target Date, Time & Start Date -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                목표 D-Day 일자 <span class="text-red-400">*</span>
+              </label>
+              <input type="date" id="formTargetDate" required
+                     class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm">
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                알람 목표 시각 <span class="text-red-400">*</span>
+              </label>
+              <input type="time" id="formTargetTime" required value="09:00"
+                     class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm">
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                카운트다운 시작일 <span class="text-xs font-normal opacity-70">(진척도 기준)</span>
+              </label>
+              <input type="date" id="formStartDate"
+                     class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm">
+            </div>
+          </div>
+
+          <!-- 3. Ringtone Selection & Sound Preview -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+              알람 링톤 선택 & 사운드 청음
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="ringtoneSelectionGrid">
+              <label onclick="selectRingtoneCard('crystal-bell')" class="ringtone-select-card flex items-center justify-between p-3.5 rounded-xl themed-inner border cursor-pointer transition-all border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10 shadow-md scale-[1.01]">
+                <div class="flex items-center gap-2.5">
+                  <input type="radio" name="formRingtone" value="crystal-bell" checked onchange="selectRingtoneCard('crystal-bell')" class="text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                  <div class="text-xs">
+                    <div class="font-bold">🔔 영롱한 미니 벨</div>
+                    <div class="text-[11px] themed-subtext">맑고 청아한 사인파 차임</div>
+                  </div>
+                </div>
+                <button type="button" onclick="previewRingtone('crystal-bell', event)" class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 text-xs shadow-sm" title="미리듣기">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+              </label>
+
+              <label onclick="selectRingtoneCard('retro-victory')" class="ringtone-select-card flex items-center justify-between p-3.5 rounded-xl themed-inner border cursor-pointer transition-all border-transparent hover:border-indigo-400/40 opacity-80 hover:opacity-100">
+                <div class="flex items-center gap-2.5">
+                  <input type="radio" name="formRingtone" value="retro-victory" onchange="selectRingtoneCard('retro-victory')" class="text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                  <div class="text-xs">
+                    <div class="font-bold">🕹️ 레트로 승리음</div>
+                    <div class="text-[11px] themed-subtext">신나는 8비트 게임 팡파레</div>
+                  </div>
+                </div>
+                <button type="button" onclick="previewRingtone('retro-victory', event)" class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 text-xs shadow-sm" title="미리듣기">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+              </label>
+
+              <label onclick="selectRingtoneCard('digital-synth')" class="ringtone-select-card flex items-center justify-between p-3.5 rounded-xl themed-inner border cursor-pointer transition-all border-transparent hover:border-indigo-400/40 opacity-80 hover:opacity-100">
+                <div class="flex items-center gap-2.5">
+                  <input type="radio" name="formRingtone" value="digital-synth" onchange="selectRingtoneCard('digital-synth')" class="text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                  <div class="text-xs">
+                    <div class="font-bold">🎹 디지털 신디사이저</div>
+                    <div class="text-[11px] themed-subtext">현대적인 일렉트로닉 코드</div>
+                  </div>
+                </div>
+                <button type="button" onclick="previewRingtone('digital-synth', event)" class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 text-xs shadow-sm" title="미리듣기">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+              </label>
+            </div>
+          </div>
+
+          <!-- 4. Theme Selection (Presets + AI Generated) -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+                애니메이션 스토리 테마 선택 <span class="text-red-400">*</span>
+              </label>
+              <button type="button" onclick="switchTab('ai-studio')" class="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>새 AI 테마 만들기</span>
+              </button>
+            </div>
+            
+            <div id="themeSelectionGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <!-- Preset themes rendered dynamically via JS -->
+            </div>
+          </div>
+
+          <!-- 5. Note / Memo -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+              축하 / 다짐 메모 문구
+            </label>
+            <textarea id="formMemo" rows="2"
+                      placeholder="목표 달성을 위한 스스로의 다짐이나 축하 메시지를 적어보세요."
+                      class="w-full px-4 py-3 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm"></textarea>
+          </div>
+
+          <!-- Form Submit Button -->
+          <div class="pt-2">
+            <button type="submit" 
+                    class="w-full py-4 rounded-xl themed-btn-primary font-extrabold text-base flex items-center justify-center gap-2 shadow-lg">
+              <i class="fa-solid fa-check"></i>
+              <span>이 설정으로 활성 알람 시작하기</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </section>
+
+
+    <!-- ==========================================================
+         TAB 3: 알람 히스토리 및 기록 관리
+         ========================================================== -->
+    <section id="view-history" class="hidden space-y-6">
+      <div class="themed-card p-6 sm:p-8">
+        
+        <div class="flex items-center justify-between border-b themed-border pb-4 mb-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i>
+              <span>알람 히스토리 & 기록</span>
+            </h2>
+            <p class="text-xs sm:text-sm themed-subtext mt-0.5">
+              목표 달성이 완료되었거나 보관된 알람 내역입니다.
+            </p>
+          </div>
+
+          <button onclick="clearAllHistory()" 
+                  id="clearHistoryBtn"
+                  class="px-3.5 py-2 text-xs font-bold rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>전체 비우기</span>
+          </button>
+        </div>
+
+        <!-- History List Container -->
+        <div id="historyListContainer" class="space-y-3">
+          <!-- Populated via JS -->
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==========================================================
+         TAB 4: AI 애니메이션 프롬프트 생성기 (Gemini Flash AI Studio)
+         ========================================================== -->
+    <section id="view-ai-studio" class="hidden space-y-6">
+      
+      <!-- AI Generator Input Card -->
+      <div class="themed-card p-6 sm:p-8 relative overflow-hidden">
+        <div class="flex items-center justify-between border-b themed-border pb-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-400/20 text-amber-300 border border-amber-400/30 mb-2">
+              <i class="fa-solid fa-brain"></i> Gemini Flash AI Engine
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+              <span>AI 애니메이션 스토리 생성기</span>
+            </h2>
+            <p class="text-xs sm:text-sm themed-subtext mt-0.5">
+              원하는 키워드나 컨셉을 적으면, AI가 1~5단계 성장 스토리와 그래픽 연출을 실시간 생성합니다.
+            </p>
+          </div>
+
+          <!-- Quick API Key Status Button -->
+          <button onclick="openApiKeyModal()" class="text-xs themed-inner px-3 py-1.5 rounded-lg hover:border-amber-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-gear text-amber-400"></i>
+            <span class="font-bold">API 설정</span>
+          </button>
+        </div>
+
+        <!-- Keyword Prompt Form -->
+        <form onsubmit="handleGenerateAiTheme(event)" class="space-y-4">
+          <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase tracking-wider themed-subtext">
+              스토리 컨셉 / 키워드 입력
+            </label>
+            <div class="relative">
+              <input type="text" id="aiConceptInput" required
+                     placeholder="예: 사과나무에서 사과 키우기, 마라톤 결승선 진입, 피아노 독주회 준비, 코딩 프로젝트 런칭"
+                     class="w-full pl-4 pr-32 py-4 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-amber-400 font-medium text-sm">
+              
+              <button type="submit" id="aiGenerateBtn"
+                      class="absolute right-2 top-2 bottom-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>스토리 생성</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Suggestion Chips -->
+          <div class="flex items-center gap-2 flex-wrap text-xs">
+            <span class="themed-subtext text-[11px] font-bold">💡 추천 컨셉:</span>
+            <button type="button" onclick="setAiPromptText('사과나무 심어서 황금 사과 수확하기')" class="px-2.5 py-1 rounded-full themed-inner hover:border-amber-400 text-[11px]">
+              🍎 사과나무 수확
+            </button>
+            <button type="button" onclick="setAiPromptText('마라톤 42.195km 풀코스 완주와 결승선 진입')" class="px-2.5 py-1 rounded-full themed-inner hover:border-amber-400 text-[11px]">
+              🏃‍♂️ 마라톤 풀코스
+            </button>
+            <button type="button" onclick="setAiPromptText('아기 펭귄이 성장하여 남극 빙하 다이빙하기')" class="px-2.5 py-1 rounded-full themed-inner hover:border-amber-400 text-[11px]">
+              🐧 펭귄의 첫 다이빙
+            </button>
+            <button type="button" onclick="setAiPromptText('마법사 수습생이 대마법사로 각성하기')" class="px-2.5 py-1 rounded-full themed-inner hover:border-amber-400 text-[11px]">
+              🧙‍♂️ 대마법사 각성
+            </button>
+          </div>
+        </form>
+
+        <!-- Loading State Indicator -->
+        <div id="aiLoadingIndicator" class="hidden my-8 p-6 text-center rounded-xl themed-inner border border-amber-500/30">
+          <div class="inline-block p-4 rounded-full bg-amber-500/10 text-amber-400 text-2xl animate-spin mb-3">
+            <i class="fa-solid fa-circle-notch"></i>
+          </div>
+          <h4 class="font-extrabold text-base text-amber-300">Gemini AI가 5단계 스토리를 구성 중입니다...</h4>
+          <p class="text-xs themed-subtext mt-1">키워드를 바탕으로 독창적인 오브젝트 그래픽과 단계별 스토리를 디자인하고 있습니다.</p>
+        </div>
+
+      </div>
+
+      <!-- AI Live Preview Canvas & Result Card -->
+      <div id="aiResultSection" class="hidden themed-card p-6 sm:p-8 space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b themed-border pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-400 text-black">
+                AI CREATED
+              </span>
+              <h3 id="aiResultTitle" class="text-xl sm:text-2xl font-black text-white">
+                스토리 제목
+              </h3>
+            </div>
+            <p id="aiResultDesc" class="text-xs sm:text-sm themed-subtext mt-1">
+              스토리 설명이 여기에 표시됩니다.
+            </p>
+          </div>
+
+          <!-- Quick Action: Apply to Alarm -->
+          <button onclick="applyAiThemeToNewAlarm()" 
+                  class="px-5 py-3 rounded-xl themed-btn-primary font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>이 AI 애니메이션 테마로 알람 만들기</span>
+          </button>
+        </div>
+
+        <!-- Live Canvas Preview Box -->
+        <div class="canvas-container relative" id="aiPreviewCanvasWrapper">
+          <canvas id="aiPreviewCanvas" class="w-full h-full block"></canvas>
+          
+          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/10 z-10">
+            <span id="aiCanvasStageName">1단계 미리보기</span>
+          </div>
+
+          <div class="absolute bottom-3 right-3 z-10">
+            <span class="text-[11px] bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-lg text-amber-300 border border-white/10 font-bold">
+              <i class="fa-solid fa-hand-pointer mr-1"></i>아래 단계 카드를 클릭하여 1~5단계 변화를 확인하세요
+            </span>
+          </div>
+        </div>
+
+        <!-- 1~5 Stage Interactive Preview Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5" id="aiStageCardsGrid">
+          <!-- Stage cards generated dynamically via JS -->
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- ==========================================================
+       MODAL 1: ALARM RING MODAL (목표 시각 도달 축하 팝업)
+       ========================================================== -->
+  <div id="alarmRingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden transition-opacity">
+    <div class="themed-card w-full max-w-lg p-6 sm:p-8 text-center relative overflow-hidden border-2 border-yellow-400 shadow-2xl animate-gentle-pulse">
+      
+      <!-- Top Decorative Glow -->
+      <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-yellow-400/30 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Icon & Vibrating Alarm Animation -->
+      <div class="w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-yellow-400 to-amber-500 flex items-center justify-center text-black text-4xl shadow-xl animate-ring-shake">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+
+      <div class="inline-block px-3 py-1 rounded-full text-xs font-black bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 mb-2">
+        ⏰ D-Day 목표 일시 도달!
+      </div>
+
+      <h2 id="modalAlarmTitle" class="text-2xl sm:text-3xl font-black tracking-tight text-white mb-2">
+        우리 100일 기념일 축하파티
+      </h2>
+
+      <p id="modalAlarmMemo" class="text-sm themed-subtext italic mb-6 max-w-md mx-auto">
+        "서로에게 감사하며 맛있는 저녁 먹기!"
+      </p>
+
+      <!-- Stage Celebration Summary -->
+      <div class="themed-inner p-4 rounded-xl mb-6 text-left border border-yellow-400/20 flex items-center gap-3">
+        <div id="modalStageIcon" class="text-3xl">💐</div>
+        <div class="text-xs">
+          <div class="font-extrabold text-yellow-300">5단계 완주 성공 (100% 진척도)</div>
+          <div id="modalStageDesc" class="themed-subtext mt-0.5">만발한 꽃밭과 아름다운 꽃다발 완성!</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button onclick="snoozeFromModal(5)" 
+                class="py-3.5 px-4 rounded-xl themed-inner hover:border-blue-400 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
+          <i class="fa-solid fa-clock text-blue-400"></i>
+          <span>5분 더 스누즈 (연기)</span>
+        </button>
+
+        <button onclick="dismissAlarmModal()" 
+                class="py-3.5 px-4 rounded-xl themed-btn-primary font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg">
+          <i class="fa-solid fa-circle-check text-white"></i>
+          <span>알람 끄기 & 히스토리 기록</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       MODAL 2: GEMINI API KEY SETTINGS MODAL
+       ========================================================== -->
+  <div id="apiKeyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden transition-opacity">
+    <div class="themed-card w-full max-w-md p-6 sm:p-7 relative border themed-border">
+      
+      <div class="flex items-center justify-between border-b themed-border pb-3 mb-4">
+        <h3 class="text-lg font-extrabold flex items-center gap-2">
+          <i class="fa-solid fa-key text-yellow-400"></i>
+          <span>Gemini API 설정</span>
+        </h3>
+        <button onclick="closeApiKeyModal()" class="text-gray-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <p class="themed-subtext leading-relaxed">
+          Google AI Studio에서 발급받은 Gemini API 키를 입력하시면, <strong class="text-white">Gemini Flash 모델</strong>로 무제한 5단계 스토리를 생성할 수 있습니다. 키는 브라우저 <code class="bg-black/30 px-1 py-0.5 rounded">localStorage</code>에만 안전하게 보관됩니다.
+        </p>
+
+        <div class="space-y-1.5">
+          <label class="block font-bold uppercase tracking-wider themed-subtext text-[11px]">
+            Gemini API Key
+          </label>
+          <input type="password" id="geminiApiKeyInput" 
+                 placeholder="AIzaSy..."
+                 class="w-full px-3.5 py-2.5 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs">
+        </div>
+
+        <div class="text-[11px] themed-subtext">
+          <span class="font-bold text-amber-400">💡 팁:</span> API 키가 없어도 내장된 스마트 AI 테마 엔진을 통해 자유롭게 테스트할 수 있습니다!
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t themed-border">
+          <button type="button" onclick="closeApiKeyModal()" class="px-4 py-2 rounded-lg themed-inner font-bold text-xs">
+            닫기
+          </button>
+          <button type="button" onclick="saveGeminiApiKey()" class="px-4 py-2 rounded-lg themed-btn-primary font-bold text-xs">
+            저장하기
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       MODAL 3: EDIT ACTIVE ALARM (종료시점 및 알람 설정 수정)
+       ========================================================== -->
+  <div id="editActiveAlarmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden transition-opacity overflow-y-auto">
+    <div class="themed-card w-full max-w-lg p-6 sm:p-7 relative border themed-border my-8 shadow-2xl">
+      
+      <div class="flex items-center justify-between border-b themed-border pb-3 mb-4">
+        <h3 class="text-base sm:text-lg font-black flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-indigo-400"></i>
+          <span>진행 중인 알람 종료시점 및 설정 수정</span>
+        </h3>
+        <button type="button" onclick="closeEditActiveAlarmModal()" class="text-gray-400 hover:text-white text-lg p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="editActiveAlarmForm" onsubmit="handleSaveActiveAlarmEdits(event)" class="space-y-4 text-xs">
+        
+        <!-- Live Remaining Time Banner Preview -->
+        <div class="p-3.5 rounded-xl themed-inner border border-indigo-500/40 bg-indigo-500/10 flex items-center justify-between shadow-sm">
+          <div>
+            <div class="text-[10px] uppercase font-bold text-indigo-300 flex items-center gap-1">
+              <i class="fa-regular fa-calendar-check"></i>
+              <span>새 목표 종료 일시 미리보기</span>
+            </div>
+            <div id="editAlarmLiveTargetPreview" class="text-xs sm:text-sm font-black text-white mt-0.5">2026.09.01 18:00</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] uppercase font-bold themed-subtext">새 예상 남은 시간</div>
+            <div id="editAlarmLiveRemainingPreview" class="text-sm sm:text-base font-black text-emerald-400 font-mono">D-05일 07:23:45</div>
+          </div>
+        </div>
+
+        <!-- 1. Title & Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="block font-bold uppercase tracking-wider themed-subtext text-[11px]">
+              알람 제목 <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="editAlarmTitleInput" required
+                   class="w-full px-3 py-2.5 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-xs">
+          </div>
+          <div class="space-y-1">
+            <label class="block font-bold uppercase tracking-wider themed-subtext text-[11px]">
+              카테고리
+            </label>
+            <select id="editAlarmCategorySelect" class="w-full px-3 py-2.5 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-xs cursor-pointer">
+              <option value="기념일/이벤트">🎉 기념일 / 이벤트</option>
+              <option value="목표/시험">🎯 목표 / 시험</option>
+              <option value="당일 일정/약속">⏰ 당일 일정 / 약속</option>
+              <option value="운동/습관 형성">🏃 운동 / 습관 형성</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. Target Date & Time (종료 시점) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl themed-inner border border-amber-500/30 bg-amber-500/5">
+          <div class="space-y-1">
+            <label class="block font-bold uppercase tracking-wider text-amber-400 text-[11px] flex items-center gap-1">
+              <i class="fa-regular fa-calendar-check"></i>
+              <span>목표 D-Day 일자 (종료일) <span class="text-red-400">*</span></span>
+            </label>
+            <input type="date" id="editAlarmTargetDateInput" required oninput="updateEditLivePreview()"
+                   class="w-full px-3 py-2 rounded-xl bg-black/40 border themed-border focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-xs text-white">
+          </div>
+          <div class="space-y-1">
+            <label class="block font-bold uppercase tracking-wider text-amber-400 text-[11px] flex items-center gap-1">
+              <i class="fa-regular fa-clock"></i>
+              <span>목표 시각 (종료 시간) <span class="text-red-400">*</span></span>
+            </label>
+            <input type="time" id="editAlarmTargetTimeInput" required oninput="updateEditLivePreview()"
+                   class="w-full px-3 py-2 rounded-xl bg-black/40 border themed-border focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-xs text-white">
+          </div>
+        </div>
+
+        <!-- Quick Target Presets (빠른 종료 시점 연장/단축키) -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block font-bold uppercase tracking-wider themed-subtext text-[10px]">
+              ⚡ 빠른 종료 시점 연장 / 단축 프리셋
+            </label>
+            <span class="text-[10px] text-amber-400 font-medium">클릭 시 자동 계산</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="quickEditAddMinutes(30)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +30분
+            </button>
+            <button type="button" onclick="quickEditAddMinutes(60)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +1시간
+            </button>
+            <button type="button" onclick="quickEditAddMinutes(180)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +3시간
+            </button>
+            <button type="button" onclick="quickEditSetTodayMidnight()" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              오늘 23:59
+            </button>
+            <button type="button" onclick="quickEditAddDays(1)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              내일 (+1일)
+            </button>
+            <button type="button" onclick="quickEditAddDays(3)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +3일 연장
+            </button>
+            <button type="button" onclick="quickEditAddDays(7)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +1주일 연장
+            </button>
+            <button type="button" onclick="quickEditAddDays(30)" class="py-2 px-1 rounded-lg themed-inner hover:border-indigo-400 font-bold text-[11px] text-center transition-all hover:bg-indigo-500/10">
+              +30일 연장
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Start Date (카운트다운 기준 시작일) -->
+        <div class="space-y-1">
+          <label class="block font-bold uppercase tracking-wider themed-subtext text-[11px]">
+            카운트다운 시작일 (1~5단계 진척도 % 계산 기준)
+          </label>
+          <input type="date" id="editAlarmStartDateInput" oninput="updateEditLivePreview()"
+                 class="w-full px-3 py-2 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-xs">
+          <p class="text-[10px] themed-subtext opacity-70">
+            시작일과 목표일 사이의 전체 기간을 기준으로 1~5단계 애니메이션 진행률이 계산됩니다.
+          </p>
+        </div>
+
+        <!-- 4. Memo -->
+        <div class="space-y-1">
+          <label class="block font-bold uppercase tracking-wider themed-subtext text-[11px]">
+            축하 / 다짐 메모 문구
+          </label>
+          <textarea id="editAlarmMemoInput" rows="2"
+                    class="w-full px-3 py-2 rounded-xl themed-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-xs"></textarea>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t themed-border">
+          <button type="button" onclick="closeEditActiveAlarmModal()" class="px-4 py-2.5 rounded-xl themed-inner font-bold text-xs hover:opacity-90">
+            취소
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl themed-btn-primary font-extrabold text-xs flex items-center gap-1.5 shadow-md">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>수정 사항 저장 및 적용</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       JAVASCRIPT APPLICATION LOGIC
+       ========================================================== -->
+  <script>
+    /* ==========================================================
+       1. GLOBAL STATE & CONSTANTS
+       ========================================================== */
+    const STORAGE_KEYS = {
+      ACTIVE_ALARM: 'dday_alarm_active',
+      HISTORY: 'dday_alarm_history',
+      AI_THEMES: 'dday_ai_themes',
+      SKIN: 'dday_app_skin',
+      API_KEY: 'dday_gemini_api_key',
+      MUTE: 'dday_audio_muted'
+    };
+
+    // Built-in Graphic Engine Presets (5 Stages each)
+    const BUILTIN_PRESETS = [
+      {
+        id: 'flower',
+        title: '꽃밭과 만발한 꽃다발',
+        icon: '🌸',
+        desc: '씨앗에서 시작해 탐스러운 꽃봉오리를 거쳐 풍성한 꽃다발로 만개합니다.',
+        color: '#ec4899',
+        stages: [
+          { icon: '🌱', percent: 0, text: '화분 속 씨앗 심기' },
+          { icon: '🌿', percent: 25, text: '초록 새싹과 작은 잎' },
+          { icon: '🌷', percent: 50, text: '줄기와 알록달록 꽃봉오리' },
+          { icon: '🌺', percent: 75, text: '향기로운 꽃 개화 시작' },
+          { icon: '💐', percent: 100, text: '만발한 꽃밭 & 축하 꽃다발' }
+        ]
+      },
+      {
+        id: 'rocket',
+        title: '우주 로켓 발사',
+        icon: '🚀',
+        desc: '설계 청사진부터 발사대 점화, 대기권 돌파 후 우주 궤도에 안착합니다.',
+        color: '#3b82f6',
+        stages: [
+          { icon: '📐', percent: 0, text: '로켓 청사진 설계' },
+          { icon: '🏗️', percent: 25, text: '발사대 거치 및 연료 주입' },
+          { icon: '🔥', percent: 50, text: '엔진 카운트다운 점화' },
+          { icon: '🌌', percent: 75, text: '대기권 고속 상승 돌파' },
+          { icon: '🪐', percent: 100, text: '신비로운 우주 궤도 안착' }
+        ]
+      },
+      {
+        id: 'cake',
+        title: '축하 케이크 굽기',
+        icon: '🎂',
+        desc: '정성스런 반죽부터 오븐 굽기, 달콤한 생크림 데코와 촛불 점화까지.',
+        color: '#f59e0b',
+        stages: [
+          { icon: '🥣', percent: 0, text: '달콤한 반죽 믹싱' },
+          { icon: '♨️', percent: 25, text: '오븐 노릇노릇 빵 굽기' },
+          { icon: '🍰', percent: 50, text: '부드러운 생크림 샌딩' },
+          { icon: '🍓', percent: 75, text: '신선한 과일 & 데코레이션' },
+          { icon: '🕯️', percent: 100, text: '촛불 켠 화려한 축하 케이크' }
+        ]
+      },
+      {
+        id: 'pet',
+        title: '드래곤 부화와 성장',
+        icon: '🐣',
+        desc: '신비한 알에서 깨어나 비행 연습을 거쳐 창공을 가르는 전설의 드래곤!',
+        color: '#10b981',
+        stages: [
+          { icon: '🥚', percent: 0, text: '따뜻한 신비의 드래곤 알' },
+          { icon: '🐣', percent: 25, text: '알에 금이 가며 아기 탄생' },
+          { icon: '🦎', percent: 50, text: '작은 날개 퍼덕이며 연습' },
+          { icon: '🐲', percent: 75, text: '불꽃 내뿜으며 공중 비행' },
+          { icon: '✨', percent: 100, text: '창공을 가르는 전설의 드래곤' }
+        ]
+      },
+      {
+        id: 'fitness',
+        title: '다이어트 & 피트니스 아바타',
+        icon: '🏃‍♂️',
+        desc: '땀 흘리는 유산소부터 식단 조절, 근육 포즈를 거쳐 워너비 몸매 완성!',
+        color: '#ef4444',
+        stages: [
+          { icon: '💦', percent: 0, text: '결심과 첫 땀방울 덤벨 운동' },
+          { icon: '🥗', percent: 25, text: '유산소 러닝 & 클린 식단' },
+          { icon: '⚡', percent: 50, text: '가벼워진 몸과 허리라인' },
+          { icon: '💪', percent: 75, text: '탄탄한 근육 & 헤드밴드' },
+          { icon: '🏆', percent: 100, text: '완벽한 피트니스 골드 스타' }
+        ]
+      }
+    ];
+
+    // Current State
+    let state = {
+      activeAlarm: null,
+      history: [],
+      aiThemes: [],
+      currentSkin: 'modern',
+      currentTab: 'active',
+      virtualProgressBoost: 0, // for simulation
+      isAudioMuted: false,
+      activeAlarmAudioNode: null,
+      tempAiGeneratedTheme: null,
+      isCelebrationActive: false
+    };
+
+    // Canvas & Animation References
+    let mainCanvas = null;
+    let mainCtx = null;
+    let mainAnimFrameId = null;
+    let mainParticles = [];
+
+    let aiPreviewCanvas = null;
+    let aiPreviewCtx = null;
+    let aiAnimFrameId = null;
+    let aiPreviewStage = 1;
+
+    let timerInterval = null;
+
+
+    /* ==========================================================
+       2. INITIALIZATION ON PAGE LOAD
+       ========================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStoredData();
+      initThemeSkin();
+      initCanvas();
+      initDefaultFormDates();
+      renderThemeSelectionList();
+      renderActiveAlarmView();
+      renderHistoryList();
+      updateApiKeyStatus();
+      updateAudioToggleUI();
+
+      // Start global 1-second countdown clock loop
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(handleClockTick, 1000);
+
+      // Start 60fps Canvas Animation Loop
+      startMainCanvasLoop();
+
+      // Window resize handler for crisp canvas
+      window.addEventListener('resize', handleCanvasResize);
+    });
+
+    function loadStoredData() {
+      // 1. Skin
+      const savedSkin = localStorage.getItem(STORAGE_KEYS.SKIN);
+      if (savedSkin) state.currentSkin = savedSkin;
+
+      // 2. Audio Mute
+      state.isAudioMuted = localStorage.getItem(STORAGE_KEYS.MUTE) === 'true';
+
+      // 3. AI Themes
+      const savedAi = localStorage.getItem(STORAGE_KEYS.AI_THEMES);
+      if (savedAi) {
+        try { state.aiThemes = JSON.parse(savedAi); } catch (e) { state.aiThemes = []; }
+      }
+
+      // 4. History
+      const savedHistory = localStorage.getItem(STORAGE_KEYS.HISTORY);
+      if (savedHistory) {
+        try { state.history = JSON.parse(savedHistory); } catch (e) { state.history = []; }
+      }
+
+      // 5. Active Alarm
+      const savedAlarm = localStorage.getItem(STORAGE_KEYS.ACTIVE_ALARM);
+      if (savedAlarm) {
+        try { state.activeAlarm = JSON.parse(savedAlarm); } catch (e) { state.activeAlarm = null; }
+      }
+
+      // Default Active Alarm if none exists
+      if (!state.activeAlarm) {
+        const now = new Date();
+        const start = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000); // 3 days ago
+        const target = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000 + 4 * 60 * 60 * 1000); // +2 days 4 hours
+        
+        state.activeAlarm = {
+          id: 'alarm-' + Date.now(),
+          title: '우리 100일 기념일 축하파티',
+          category: '기념일/이벤트',
+          startDate: start.toISOString(),
+          targetDate: target.toISOString(),
+          ringtone: 'crystal-bell',
+          themeId: 'flower',
+          memo: '서로에게 감사하며 맛있는 저녁 먹기!',
+          createdAt: now.toISOString(),
+          isCompleted: false
+        };
+        saveActiveAlarm();
+      }
+    }
+
+    function saveActiveAlarm() {
+      if (state.activeAlarm) {
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_ALARM, JSON.stringify(state.activeAlarm));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.ACTIVE_ALARM);
+      }
+    }
+
+    function saveHistory() {
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(state.history));
+      renderHistoryList();
+    }
+
+    function saveAiThemes() {
+      localStorage.setItem(STORAGE_KEYS.AI_THEMES, JSON.stringify(state.aiThemes));
+      renderThemeSelectionList();
+    }
+
+
+    /* ==========================================================
+       3. WEB AUDIO API SOUND ENGINE (Pure Synthesized)
+       ========================================================== */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleAudioMute() {
+      state.isAudioMuted = !state.isAudioMuted;
+      localStorage.setItem(STORAGE_KEYS.MUTE, state.isAudioMuted);
+      updateAudioToggleUI();
+      if (!state.isAudioMuted) {
+        playToneFeedback(440, 0.1);
+      }
+    }
+
+    function updateAudioToggleUI() {
+      const icon = document.getElementById('audioIcon');
+      const btn = document.getElementById('audioToggleBtn');
+      if (state.isAudioMuted) {
+        icon.className = 'fa-solid fa-volume-xmark text-red-400';
+        btn.querySelector('span').textContent = '사운드 OFF';
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-emerald-400';
+        btn.querySelector('span').textContent = '사운드 ON';
+      }
+    }
+
+    // 1. Crystal Bell Sound (맑은 차임)
+    function playCrystalBell() {
+      if (state.isAudioMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const freqs = [880, 1320, 1760, 2640]; // A5, E6, A6, E7
+        const now = ctx.currentTime;
+        freqs.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+          gain.gain.setValueAtTime(0, now + idx * 0.08);
+          gain.gain.linearRampToValueAtTime(0.25 / (idx + 1), now + idx * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 1.6);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 1.7);
+        });
+      } catch (e) { console.warn('Audio play error:', e); }
+    }
+
+    // 2. Retro Game Victory Fanfare (8비트 아르페지오)
+    function playRetroVictory() {
+      if (state.isAudioMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const notes = [
+          { f: 523.25, d: 0.1 },  // C5
+          { f: 659.25, d: 0.1 },  // E5
+          { f: 783.99, d: 0.1 },  // G5
+          { f: 1046.50, d: 0.2 }, // C6
+          { f: 880.00, d: 0.1 },  // A5
+          { f: 1046.50, d: 0.1 }, // C6
+          { f: 1318.51, d: 0.45 } // E6
+        ];
+        let t = ctx.currentTime;
+        notes.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(note.f, t);
+
+          gain.gain.setValueAtTime(0.15, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + note.d);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(t);
+          osc.stop(t + note.d);
+          t += note.d * 0.95;
+        });
+      } catch (e) { console.warn('Audio play error:', e); }
+    }
+
+    // 3. Digital Synth Chime (디지털 신디사이저 코드)
+    function playDigitalSynth() {
+      if (state.isAudioMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const chord = [440, 554.37, 659.25, 830.61]; // A maj7 chord
+        const now = ctx.currentTime;
+        chord.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+          const gain = ctx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1200, now);
+          filter.frequency.exponentialRampToValueAtTime(300, now + 1.2);
+
+          gain.gain.setValueAtTime(0.12, now + i * 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + i * 0.04);
+          osc.stop(now + 1.5);
+        });
+      } catch (e) { console.warn('Audio play error:', e); }
+    }
+
+    function previewRingtone(type, evt) {
+      if (evt) evt.stopPropagation();
+      playRingtoneSound(type);
+    }
+
+    function playRingtoneSound(type) {
+      if (type === 'retro-victory') {
+        playRetroVictory();
+      } else if (type === 'digital-synth') {
+        playDigitalSynth();
+      } else {
+        playCrystalBell();
+      }
+    }
+
+    function playToneFeedback(freq, duration) {
+      if (state.isAudioMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Continuous Alarm Loop for Alarm Trigger
+    let alarmSoundInterval = null;
+    function startAlarmSoundLoop(ringtoneType) {
+      stopAlarmSoundLoop();
+      playRingtoneSound(ringtoneType);
+      alarmSoundInterval = setInterval(() => {
+        playRingtoneSound(ringtoneType);
+      }, 2200);
+    }
+
+    function stopAlarmSoundLoop() {
+      if (alarmSoundInterval) {
+        clearInterval(alarmSoundInterval);
+        alarmSoundInterval = null;
+      }
+    }
+
+
+    /* ==========================================================
+       4. THEME SKIN SYSTEM
+       ========================================================== */
+    function changeTheme(skinName) {
+      document.body.className = `theme-${skinName} antialiased selection:bg-indigo-500 selection:text-white`;
+      state.currentSkin = skinName;
+      localStorage.setItem(STORAGE_KEYS.SKIN, skinName);
+      
+      const select = document.getElementById('themeSkinSelect');
+      if (select) select.value = skinName;
+      playToneFeedback(580, 0.08);
+    }
+
+    function initThemeSkin() {
+      const select = document.getElementById('themeSkinSelect');
+      if (select) select.value = state.currentSkin;
+      changeTheme(state.currentSkin);
+    }
+
+
+    /* ==========================================================
+       5. NAVIGATION & TABS
+       ========================================================== */
+    function switchTab(tabId) {
+      state.currentTab = tabId;
+      playToneFeedback(520, 0.05);
+
+      const tabs = ['active', 'create', 'history', 'ai-studio'];
+      tabs.forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const btnEl = document.getElementById(`tabBtn-${t}`);
+        if (viewEl) {
+          if (t === tabId) {
+            viewEl.classList.remove('hidden');
+          } else {
+            viewEl.classList.add('hidden');
+          }
+        }
+        if (btnEl) {
+          if (t === tabId) {
+            btnEl.classList.add('active');
+            btnEl.classList.remove('themed-subtext');
+          } else {
+            btnEl.classList.remove('active');
+            btnEl.classList.add('themed-subtext');
+          }
+        }
+      });
+
+      if (tabId === 'active') {
+        handleCanvasResize();
+      } else if (tabId === 'ai-studio' && state.tempAiGeneratedTheme) {
+        handleAiPreviewCanvasResize();
+      }
+    }
+
+
+    /* ==========================================================
+       6. D-DAY CALCULATION & PROGRESS LOGIC
+       ========================================================== */
+    function calculateAlarmMetrics(alarm) {
+      if (!alarm) return { progress: 0, stage: 1, remainingMs: 0, ddayText: 'D-Day 정보 없음', isReached: false };
+
+      const now = new Date().getTime();
+      const targetTime = new Date(alarm.targetDate).getTime();
+      const startTime = new Date(alarm.startDate || alarm.createdAt || (targetTime - 7 * 24 * 60 * 60 * 1000)).getTime();
+
+      const totalDuration = Math.max(1000, targetTime - startTime);
+      const elapsed = now - startTime;
+
+      let rawProgress = (elapsed / totalDuration) * 100;
+      // Add virtual simulation boost if any
+      let effectiveProgress = Math.min(100, Math.max(0, rawProgress + (state.virtualProgressBoost || 0)));
+
+      const remainingMs = Math.max(0, targetTime - now - (state.virtualProgressBoost ? (state.virtualProgressBoost / 100 * totalDuration) : 0));
+      const isReached = remainingMs <= 0 || effectiveProgress >= 100;
+
+      // 5-Stage calculation
+      let stage = 1;
+      if (effectiveProgress >= 100 || isReached) {
+        stage = 5;
+        effectiveProgress = 100;
+      } else if (effectiveProgress >= 75) {
+        stage = 4;
+      } else if (effectiveProgress >= 50) {
+        stage = 3;
+      } else if (effectiveProgress >= 25) {
+        stage = 2;
+      } else {
+        stage = 1;
+      }
+
+      // Format Countdown Text
+      let ddayText = '';
+      if (isReached) {
+        ddayText = '🎉 D-Day 축하합니다!';
+      } else {
+        const totalSec = Math.floor(remainingMs / 1000);
+        const days = Math.floor(totalSec / (3600 * 24));
+        const hours = Math.floor((totalSec % (3600 * 24)) / 3600);
+        const mins = Math.floor((totalSec % 3600) / 60);
+        const secs = totalSec % 60;
+
+        const pad = n => String(n).padStart(2, '0');
+        ddayText = `D-${pad(days)}일 ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+      }
+
+      return {
+        progress: effectiveProgress,
+        stage: stage,
+        remainingMs: remainingMs,
+        ddayText: ddayText,
+        isReached: isReached
+      };
+    }
+
+    function handleClockTick() {
+      if (!state.activeAlarm) return;
+
+      const metrics = calculateAlarmMetrics(state.activeAlarm);
+
+      // Update timer display
+      const timerDisplay = document.getElementById('ddayTimerDisplay');
+      if (timerDisplay) {
+        timerDisplay.textContent = metrics.ddayText;
+        if (metrics.isReached) {
+          timerDisplay.className = 'text-2xl sm:text-3xl font-black tracking-wider text-yellow-300 font-display mt-0.5 animate-pulse';
+        } else {
+          timerDisplay.className = 'text-2xl sm:text-3xl font-black tracking-wider text-emerald-400 font-display mt-0.5';
+        }
+      }
+
+      // Update progress bar
+      const progressBar = document.getElementById('alarmProgressBar');
+      const progressPercentText = document.getElementById('progressTextPercent');
+      const canvasProgressBadge = document.getElementById('canvasProgressBadge');
+
+      if (progressBar) progressBar.style.width = `${metrics.progress.toFixed(1)}%`;
+      if (progressPercentText) progressPercentText.textContent = `${metrics.progress.toFixed(1)}%`;
+      if (canvasProgressBadge) canvasProgressBadge.textContent = `진척도: ${metrics.progress.toFixed(1)}%`;
+
+      // Update stage badge & stage step highlights
+      updateStageStepHighlights(metrics.stage);
+
+      // Check if newly reached alarm: activate 5th stage celebration mode without blocking dark modal
+      if (metrics.isReached) {
+        if (!state.isCelebrationActive) {
+          activateCelebrationMode();
+        }
+      } else {
+        if (state.isCelebrationActive) {
+          deactivateCelebrationMode();
+        }
+      }
+    }
+
+    function updateStageStepHighlights(currentStage) {
+      const theme = getThemeById(state.activeAlarm ? state.activeAlarm.themeId : 'flower');
+      const stageBadge = document.getElementById('canvasStageBadge');
+      
+      if (stageBadge && theme) {
+        const stageInfo = theme.stages[currentStage - 1] || theme.stages[0];
+        stageBadge.textContent = `현재: ${currentStage}단계 (${stageInfo.text})`;
+      }
+
+      const stageElements = document.querySelectorAll('.stage-step');
+      stageElements.forEach(el => {
+        const s = parseInt(el.getAttribute('data-stage'), 10);
+        if (s === currentStage) {
+          el.classList.add('active');
+          el.querySelector('.stage-icon').classList.add('scale-125');
+        } else {
+          el.classList.remove('active');
+          el.querySelector('.stage-icon').classList.remove('scale-125');
+        }
+      });
+    }
+
+    function renderActiveAlarmView() {
+      if (!state.activeAlarm) return;
+
+      const alarm = state.activeAlarm;
+      const theme = getThemeById(alarm.themeId);
+
+      document.getElementById('alarmTitleDisplay').textContent = alarm.title;
+      document.getElementById('alarmCategoryTag').textContent = getCategoryWithIcon(alarm.category);
+      document.getElementById('alarmThemeBadge').textContent = `${theme ? theme.icon : '✨'} ${theme ? theme.title : '기본 테마'}`;
+      document.getElementById('alarmMemoDisplay').textContent = alarm.memo ? `"${alarm.memo}"` : '등록된 메모가 없습니다.';
+
+      // Format Target Date
+      const targetObj = new Date(alarm.targetDate);
+      const pad = n => String(n).padStart(2, '0');
+      const formattedDate = `${targetObj.getFullYear()}.${pad(targetObj.getMonth() + 1)}.${pad(targetObj.getDate())} ${pad(targetObj.getHours())}:${pad(targetObj.getMinutes())}`;
+      document.getElementById('alarmTargetDateDisplay').textContent = formattedDate;
+
+      // Update Stage Step card titles & icons from current theme
+      if (theme && theme.stages) {
+        const stageEls = document.querySelectorAll('.stage-step');
+        stageEls.forEach((el, idx) => {
+          const st = theme.stages[idx];
+          if (st) {
+            el.querySelector('.stage-icon').textContent = st.icon || '⭐';
+            el.querySelector('.stage-desc').textContent = st.text || `${idx+1}단계`;
+          }
+        });
+      }
+
+      handleClockTick();
+    }
+
+
+    /* ==========================================================
+       7. SIMULATION & INTERACTIVE ACTION BUTTONS
+       ========================================================== */
+    function openEditActiveAlarmModal() {
+      if (!state.activeAlarm) {
+        alert('현재 활성화된 알람이 없습니다. [새 알람 등록]에서 먼저 알람을 생성해주세요.');
+        switchTab('create');
+        return;
+      }
+
+      const alarm = state.activeAlarm;
+      const targetDateObj = new Date(alarm.targetDate);
+      const startDateObj = alarm.startDate ? new Date(alarm.startDate) : new Date();
+
+      const pad = n => String(n).padStart(2, '0');
+      const targetDateStr = `${targetDateObj.getFullYear()}-${pad(targetDateObj.getMonth() + 1)}-${pad(targetDateObj.getDate())}`;
+      const targetTimeStr = `${pad(targetDateObj.getHours())}:${pad(targetDateObj.getMinutes())}`;
+      const startDateStr = `${startDateObj.getFullYear()}-${pad(startDateObj.getMonth() + 1)}-${pad(startDateObj.getDate())}`;
+
+      document.getElementById('editAlarmTitleInput').value = alarm.title || '';
+      document.getElementById('editAlarmCategorySelect').value = alarm.category || '기념일/이벤트';
+      document.getElementById('editAlarmTargetDateInput').value = targetDateStr;
+      document.getElementById('editAlarmTargetTimeInput').value = targetTimeStr;
+      document.getElementById('editAlarmStartDateInput').value = startDateStr;
+      document.getElementById('editAlarmMemoInput').value = alarm.memo || '';
+
+      updateEditLivePreview();
+
+      const modal = document.getElementById('editActiveAlarmModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        playToneFeedback(520, 0.05);
+      }
+    }
+
+    function closeEditActiveAlarmModal() {
+      const modal = document.getElementById('editActiveAlarmModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateEditLivePreview() {
+      const targetDate = document.getElementById('editAlarmTargetDateInput').value;
+      const targetTime = document.getElementById('editAlarmTargetTimeInput').value || '18:00';
+      const targetDisplay = document.getElementById('editAlarmLiveTargetPreview');
+      const remainingDisplay = document.getElementById('editAlarmLiveRemainingPreview');
+
+      if (!targetDate || !targetDisplay || !remainingDisplay) return;
+
+      const targetDt = new Date(`${targetDate}T${targetTime}:00`);
+      targetDisplay.textContent = formatDateSimple(targetDt);
+
+      const now = Date.now();
+      const diffMs = targetDt.getTime() - now;
+
+      if (diffMs <= 0) {
+        remainingDisplay.textContent = 'D-Day 도달 완료! (즉시 울림)';
+        remainingDisplay.className = 'text-sm sm:text-base font-black text-amber-400 font-mono';
+      } else {
+        const totalSecs = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSecs / 86400);
+        const hours = Math.floor((totalSecs % 86400) / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
+        const pad = n => String(n).padStart(2, '0');
+
+        remainingDisplay.textContent = `D-${pad(days)}일 ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+        remainingDisplay.className = 'text-sm sm:text-base font-black text-emerald-400 font-mono';
+      }
+    }
+
+    function quickEditAddMinutes(mins) {
+      const dateVal = document.getElementById('editAlarmTargetDateInput').value;
+      const timeVal = document.getElementById('editAlarmTargetTimeInput').value || '18:00';
+      let baseDt = dateVal ? new Date(`${dateVal}T${timeVal}:00`) : new Date();
+      if (isNaN(baseDt.getTime()) || baseDt.getTime() < Date.now()) {
+        baseDt = new Date();
+      }
+
+      const newDt = new Date(baseDt.getTime() + mins * 60 * 1000);
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('editAlarmTargetDateInput').value = `${newDt.getFullYear()}-${pad(newDt.getMonth() + 1)}-${pad(newDt.getDate())}`;
+      document.getElementById('editAlarmTargetTimeInput').value = `${pad(newDt.getHours())}:${pad(newDt.getMinutes())}`;
+      
+      updateEditLivePreview();
+      playToneFeedback(560, 0.04);
+    }
+
+    function quickEditSetTodayMidnight() {
+      const today = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('editAlarmTargetDateInput').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+      document.getElementById('editAlarmTargetTimeInput').value = '23:59';
+
+      updateEditLivePreview();
+      playToneFeedback(560, 0.04);
+    }
+
+    function quickEditAddDays(days) {
+      const dateVal = document.getElementById('editAlarmTargetDateInput').value;
+      const timeVal = document.getElementById('editAlarmTargetTimeInput').value || '18:00';
+      let baseDt = dateVal ? new Date(`${dateVal}T${timeVal}:00`) : new Date();
+      if (isNaN(baseDt.getTime())) baseDt = new Date();
+
+      baseDt.setDate(baseDt.getDate() + days);
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('editAlarmTargetDateInput').value = `${baseDt.getFullYear()}-${pad(baseDt.getMonth() + 1)}-${pad(baseDt.getDate())}`;
+
+      updateEditLivePreview();
+      playToneFeedback(580, 0.04);
+    }
+
+    function handleSaveActiveAlarmEdits(e) {
+      e.preventDefault();
+      if (!state.activeAlarm) return;
+
+      const title = document.getElementById('editAlarmTitleInput').value.trim();
+      const category = document.getElementById('editAlarmCategorySelect').value;
+      const targetDate = document.getElementById('editAlarmTargetDateInput').value;
+      const targetTime = document.getElementById('editAlarmTargetTimeInput').value;
+      const startDate = document.getElementById('editAlarmStartDateInput').value;
+      const memo = document.getElementById('editAlarmMemoInput').value.trim();
+
+      const targetIso = new Date(`${targetDate}T${targetTime}:00`).toISOString();
+      const startIso = startDate ? new Date(`${startDate}T00:00:00`).toISOString() : state.activeAlarm.startDate;
+
+      state.activeAlarm.title = title;
+      state.activeAlarm.category = category;
+      state.activeAlarm.targetDate = targetIso;
+      state.activeAlarm.startDate = startIso;
+      state.activeAlarm.memo = memo;
+      state.virtualProgressBoost = 0;
+
+      saveActiveAlarm();
+      renderActiveAlarmView();
+      closeEditActiveAlarmModal();
+      
+      triggerConfettiParticles(40);
+      playCrystalBell();
+      alert('✨ 알람 목표 일시 및 설정이 성공적으로 업데이트되었습니다!');
+    }
+
+    function boostProgress(amount) {
+      state.virtualProgressBoost = (state.virtualProgressBoost || 0) + amount;
+      if (state.virtualProgressBoost > 100) state.virtualProgressBoost = 100;
+      
+      playToneFeedback(640, 0.1);
+      triggerConfettiParticles(25);
+      handleClockTick();
+    }
+
+    function activateCelebrationMode() {
+      if (!state.activeAlarm) return;
+      state.isCelebrationActive = true;
+
+      const alarm = state.activeAlarm;
+      const theme = getThemeById(alarm.themeId);
+      const stage5Info = theme && theme.stages ? theme.stages[4] : { icon: '🏆', text: 'D-Day 완주 성공!' };
+
+      // Update overlay elements
+      const overlay = document.getElementById('canvasCelebrationOverlay');
+      if (overlay) {
+        const badgeIcon = document.getElementById('celebBadgeIcon');
+        const titleDisp = document.getElementById('celebTitleDisplay');
+        const stageDescDisp = document.getElementById('celebStageDescDisplay');
+        const memoDisp = document.getElementById('celebMemoDisplay');
+
+        if (badgeIcon) badgeIcon.textContent = stage5Info.icon || '🏆';
+        if (titleDisp) titleDisp.textContent = alarm.title;
+        if (stageDescDisp) stageDescDisp.textContent = stage5Info.text || 'D-Day 목표 완주 달성!';
+        if (memoDisp) memoDisp.textContent = alarm.memo ? `"${alarm.memo}"` : '정말 수고하셨습니다! 목표 달성을 진심으로 축하합니다!';
+
+        overlay.classList.remove('hidden');
+        overlay.classList.remove('translate-y-2');
+        overlay.classList.add('translate-y-0');
+      }
+
+      // Continuous party confetti burst & celebratory sound
+      triggerConfettiParticles(70);
+      playRetroVictory();
+    }
+
+    function deactivateCelebrationMode() {
+      state.isCelebrationActive = false;
+      const overlay = document.getElementById('canvasCelebrationOverlay');
+      if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.add('translate-y-2');
+        overlay.classList.remove('translate-y-0');
+      }
+    }
+
+    function openCompletionDialogFromCelebration() {
+      if (!state.activeAlarm) return;
+      const metrics = calculateAlarmMetrics(state.activeAlarm);
+      triggerAlarmModal(state.activeAlarm, metrics);
+    }
+
+    function testTriggerAlarm() {
+      if (!state.activeAlarm) return;
+      state.virtualProgressBoost = 100;
+      handleClockTick();
+      activateCelebrationMode();
+
+      const canvasWrap = document.getElementById('canvasWrapper');
+      if (canvasWrap) {
+        canvasWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      playCrystalBell();
+    }
+
+    function snoozeAlarm(mins) {
+      if (!state.activeAlarm) return;
+      deactivateCelebrationMode();
+      const currentTarget = new Date(state.activeAlarm.targetDate).getTime();
+      const newTarget = new Date(currentTarget + mins * 60 * 1000);
+      
+      state.activeAlarm.targetDate = newTarget.toISOString();
+      state.virtualProgressBoost = 0; // reset boost
+      saveActiveAlarm();
+      renderActiveAlarmView();
+      playToneFeedback(480, 0.15);
+      alert(`⏰ 알람이 ${mins}분 뒤 (${formatDateSimple(newTarget)})로 연기되었습니다.`);
+    }
+
+    function completeAndResetAlarm() {
+      if (!state.activeAlarm) return;
+      deactivateCelebrationMode();
+
+      const completedAlarm = {
+        ...state.activeAlarm,
+        completedAt: new Date().toISOString(),
+        id: 'hist-' + Date.now()
+      };
+
+      // Add to history
+      state.history.unshift(completedAlarm);
+      saveHistory();
+
+      // Reset active alarm to tomorrow same time
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0);
+
+      const newStart = new Date();
+      state.activeAlarm = {
+        ...state.activeAlarm,
+        startDate: newStart.toISOString(),
+        targetDate: tomorrow.toISOString(),
+        createdAt: newStart.toISOString(),
+        isCompleted: false
+      };
+      state.virtualProgressBoost = 0;
+      saveActiveAlarm();
+
+      renderActiveAlarmView();
+      triggerConfettiParticles(60);
+      playCrystalBell();
+      alert('🎉 알람이 히스토리에 저장되었으며, 익일 동시각으로 새롭게 리셋되었습니다!');
+    }
+
+    function triggerAlarmModal(alarm, metrics) {
+      const modal = document.getElementById('alarmRingModal');
+      const theme = getThemeById(alarm.themeId);
+      const stage5Info = theme && theme.stages ? theme.stages[4] : { icon: '💐', text: '축하합니다!' };
+
+      document.getElementById('modalAlarmTitle').textContent = alarm.title;
+      document.getElementById('modalAlarmMemo').textContent = alarm.memo ? `"${alarm.memo}"` : '목표 달성을 축하합니다!';
+      document.getElementById('modalStageIcon').textContent = stage5Info.icon || '🏆';
+      document.getElementById('modalStageDesc').textContent = stage5Info.text || 'D-Day 목표 완주 달성!';
+
+      modal.classList.remove('hidden');
+      startAlarmSoundLoop(alarm.ringtone || 'crystal-bell');
+      triggerConfettiParticles(100);
+    }
+
+    function snoozeFromModal(mins) {
+      stopAlarmSoundLoop();
+      document.getElementById('alarmRingModal').classList.add('hidden');
+      snoozeAlarm(mins);
+    }
+
+    function dismissAlarmModal() {
+      stopAlarmSoundLoop();
+      document.getElementById('alarmRingModal').classList.add('hidden');
+      if (state.activeAlarm) {
+        completeAndResetAlarm();
+      }
+    }
+
+
+    /* ==========================================================
+       8. HTML5 CANVAS GRAPHIC ENGINE (60 FPS Procedural)
+       ========================================================== */
+    function initCanvas() {
+      mainCanvas = document.getElementById('stageCanvas');
+      if (mainCanvas) mainCtx = mainCanvas.getContext('2d');
+
+      aiPreviewCanvas = document.getElementById('aiPreviewCanvas');
+      if (aiPreviewCanvas) aiPreviewCtx = aiPreviewCanvas.getContext('2d');
+
+      handleCanvasResize();
+      handleAiPreviewCanvasResize();
+    }
+
+    function handleCanvasResize() {
+      if (!mainCanvas) return;
+      const rect = mainCanvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      mainCanvas.width = rect.width * dpr;
+      mainCanvas.height = rect.height * dpr;
+      if (mainCtx) {
+        mainCtx.resetTransform();
+        mainCtx.scale(dpr, dpr);
+      }
+    }
+
+    function handleAiPreviewCanvasResize() {
+      if (!aiPreviewCanvas) return;
+      const rect = aiPreviewCanvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      aiPreviewCanvas.width = rect.width * dpr;
+      aiPreviewCanvas.height = rect.height * dpr;
+      if (aiPreviewCtx) {
+        aiPreviewCtx.resetTransform();
+        aiPreviewCtx.scale(dpr, dpr);
+      }
+    }
+
+    // Main Canvas Render Loop
+    function startMainCanvasLoop() {
+      let lastTime = performance.now();
+
+      function loop(currentTime) {
+        const dt = (currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+        renderMainStage(currentTime, dt);
+        renderAiPreviewStage(currentTime, dt);
+
+        mainAnimFrameId = requestAnimationFrame(loop);
+      }
+      mainAnimFrameId = requestAnimationFrame(loop);
+    }
+
+    function renderMainStage(time, dt) {
+      if (!mainCanvas || !mainCtx || state.currentTab !== 'active') return;
+      const rect = mainCanvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.floor(rect.width * dpr);
+      const targetH = Math.floor(rect.height * dpr);
+
+      if (targetW > 0 && (mainCanvas.width !== targetW || mainCanvas.height !== targetH)) {
+        mainCanvas.width = targetW;
+        mainCanvas.height = targetH;
+        mainCtx.resetTransform();
+        mainCtx.scale(dpr, dpr);
+      }
+
+      const w = rect.width;
+      const h = rect.height;
+      if (w <= 0 || h <= 0) return;
+
+      mainCtx.clearRect(0, 0, w, h);
+
+      // Compute current alarm progress and stage
+      const metrics = calculateAlarmMetrics(state.activeAlarm);
+      const themeId = state.activeAlarm ? state.activeAlarm.themeId : 'flower';
+      const stage = metrics.stage;
+      const progress = metrics.progress;
+
+      // Draw background ambient particles & stage scene
+      drawPresetScene(mainCtx, themeId, stage, progress, w, h, time);
+
+      // Render Floating Confetti / Celebrations
+      updateAndDrawParticles(mainCtx, w, h, dt);
+    }
+
+    function renderAiPreviewStage(time, dt) {
+      if (!aiPreviewCanvas || !aiPreviewCtx || state.currentTab !== 'ai-studio') return;
+      const rect = aiPreviewCanvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.floor(rect.width * dpr);
+      const targetH = Math.floor(rect.height * dpr);
+
+      if (targetW > 0 && (aiPreviewCanvas.width !== targetW || aiPreviewCanvas.height !== targetH)) {
+        aiPreviewCanvas.width = targetW;
+        aiPreviewCanvas.height = targetH;
+        aiPreviewCtx.resetTransform();
+        aiPreviewCtx.scale(dpr, dpr);
+      }
+
+      const w = rect.width;
+      const h = rect.height;
+      if (w <= 0 || h <= 0) return;
+
+      aiPreviewCtx.clearRect(0, 0, w, h);
+
+      if (state.tempAiGeneratedTheme) {
+        drawAiDynamicScene(aiPreviewCtx, state.tempAiGeneratedTheme, aiPreviewStage, w, h, time);
+      }
+    }
+
+
+    /* ==========================================================
+       9. 5-STAGE CANVAS GRAPHIC ENGINE PRESETS & AI SCENES
+       ========================================================== */
+    function drawPresetScene(ctx, themeId, stage, progress, w, h, time) {
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Match Preset ID
+      if (themeId === 'rocket') {
+        drawRocketScene(ctx, stage, progress, cx, cy, w, h, time);
+      } else if (themeId === 'cake') {
+        drawCakeScene(ctx, stage, progress, cx, cy, w, h, time);
+      } else if (themeId === 'pet') {
+        drawPetScene(ctx, stage, progress, cx, cy, w, h, time);
+      } else if (themeId === 'fitness') {
+        drawFitnessScene(ctx, stage, progress, cx, cy, w, h, time);
+      } else if (themeId.startsWith('ai-')) {
+        const aiTheme = state.aiThemes.find(t => t.id === themeId);
+        if (aiTheme) {
+          drawAiDynamicScene(ctx, aiTheme, stage, w, h, time);
+        } else {
+          drawFlowerScene(ctx, stage, progress, cx, cy, w, h, time);
+        }
+      } else {
+        // Default: Flower
+        drawFlowerScene(ctx, stage, progress, cx, cy, w, h, time);
+      }
+    }
+
+    // 🌸 1. Flower Preset (꽃밭과 만발한 꽃다발)
+    function drawFlowerScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      // Ground/Grass Gradient
+      const groundY = h * 0.78;
+      const grad = ctx.createLinearGradient(0, groundY, 0, h);
+      grad.addColorStop(0, '#2d5a27');
+      grad.addColorStop(1, '#1b3817');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, groundY, w, h - groundY);
+
+      // Stage 1: Seed in Soil (0-24%)
+      if (stage === 1) {
+        ctx.fillStyle = '#8d5b4c';
+        ctx.beginPath();
+        ctx.moveTo(cx - 45, groundY + 10);
+        ctx.lineTo(cx + 45, groundY + 10);
+        ctx.lineTo(cx + 32, groundY + 70);
+        ctx.lineTo(cx - 32, groundY + 70);
+        ctx.closePath();
+        ctx.fill();
+
+        const seedPulse = Math.sin(t * 3) * 3;
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(cx, groundY + 38, 12 + seedPulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#854d0e';
+        ctx.beginPath();
+        ctx.ellipse(cx, groundY + 38, 8, 12, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#60a5fa';
+        ctx.beginPath();
+        ctx.arc(cx + Math.sin(t * 2) * 20, groundY - 20 + (t * 50 % 40), 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Stage 2: Tiny Sprout (25-49%)
+      else if (stage === 2) {
+        ctx.fillStyle = '#8d5b4c';
+        ctx.beginPath();
+        ctx.moveTo(cx - 45, groundY + 10);
+        ctx.lineTo(cx + 45, groundY + 10);
+        ctx.lineTo(cx + 32, groundY + 70);
+        ctx.lineTo(cx - 32, groundY + 70);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#4ade80';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(cx, groundY + 10);
+        ctx.quadraticCurveTo(cx + Math.sin(t) * 10, groundY - 30, cx, groundY - 60);
+        ctx.stroke();
+
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.ellipse(cx - 20, groundY - 55, 18, 9, -0.4 + Math.sin(t * 2) * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 20, groundY - 55, 18, 9, 0.4 - Math.sin(t * 2) * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Stage 3: Growing Bud (50-74%)
+      else if (stage === 3) {
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 9;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(cx, groundY + 10);
+        ctx.bezierCurveTo(cx - 15, groundY - 50, cx + 15, groundY - 100, cx, groundY - 130);
+        ctx.stroke();
+
+        ctx.fillStyle = '#16a34a';
+        ctx.beginPath();
+        ctx.ellipse(cx - 32, groundY - 60, 26, 12, -0.5, 0, Math.PI * 2);
+        ctx.ellipse(cx + 32, groundY - 90, 26, 12, 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ec4899';
+        ctx.beginPath();
+        ctx.arc(cx, groundY - 135 + Math.sin(t * 2) * 3, 22, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(cx - 6, groundY - 140, 14, 0, Math.PI * 2);
+        ctx.arc(cx + 6, groundY - 140, 14, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Stage 4: Blooming Flower (75-99%)
+      else if (stage === 4) {
+        ctx.strokeStyle = '#15803d';
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(cx, groundY + 10);
+        ctx.quadraticCurveTo(cx + Math.sin(t) * 12, groundY - 70, cx, groundY - 140);
+        ctx.stroke();
+
+        const flowerY = groundY - 140;
+        const petalCount = 8;
+        const sway = Math.sin(t) * 0.1;
+        ctx.save();
+        ctx.translate(cx, flowerY);
+        ctx.rotate(sway);
+        for (let i = 0; i < petalCount; i++) {
+          const angle = (i * Math.PI * 2) / petalCount + t * 0.5;
+          ctx.fillStyle = i % 2 === 0 ? '#f43f5e' : '#fb7185';
+          ctx.beginPath();
+          ctx.ellipse(Math.cos(angle) * 32, Math.sin(angle) * 32, 22, 14, angle, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(0, 0, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        const bx = cx + Math.cos(t * 2) * 70;
+        const by = flowerY - 40 + Math.sin(t * 3) * 20;
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.ellipse(bx - 8, by, 10, 6, Math.sin(t * 10), 0, Math.PI * 2);
+        ctx.ellipse(bx + 8, by, 10, 6, -Math.sin(t * 10), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Stage 5: Celebratory Bouquet & Full Garden (100%)
+      else {
+        for (let i = -4; i <= 4; i++) {
+          const fx = cx + i * 55;
+          const fy = groundY - 40 - Math.abs(i) * 12;
+          ctx.fillStyle = ['#ec4899', '#f59e0b', '#8b5cf6', '#06b6d4', '#f43f5e'][Math.abs(i) % 5];
+          ctx.beginPath();
+          ctx.arc(fx, fy + Math.sin(t * 2 + i) * 6, 16, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        const bouquetY = cy + 10;
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.moveTo(cx - 50, bouquetY + 50);
+        ctx.lineTo(cx + 50, bouquetY + 50);
+        ctx.lineTo(cx, bouquetY + 110);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#ec4899';
+        ctx.beginPath();
+        ctx.arc(cx, bouquetY + 70, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let r = 0; r < 12; r++) {
+          const rx = cx + Math.cos(r * 0.52) * 45;
+          const ry = bouquetY + Math.sin(r * 0.52) * 35;
+          ctx.fillStyle = ['#ef4444', '#f43f5e', '#ec4899', '#fb7185', '#a855f7'][r % 5];
+          ctx.beginPath();
+          ctx.arc(rx, ry + Math.sin(t * 3 + r) * 4, 18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = '#e11d48';
+        ctx.beginPath();
+        ctx.arc(cx, bouquetY - 10 + Math.sin(t * 3) * 5, 26, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffe4e6';
+        ctx.beginPath();
+        ctx.arc(cx, bouquetY - 10 + Math.sin(t * 3) * 5, 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 🚀 2. Rocket Preset (우주 로켓 발사)
+    function drawRocketScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      // Stage 1: Blueprint Schematic (0-24%)
+      if (stage === 1) {
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 25) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+        for (let y = 0; y < h; y += 25) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(cx - 24, cy - 60, 48, 120);
+        ctx.beginPath();
+        ctx.moveTo(cx - 24, cy - 60); ctx.lineTo(cx, cy - 110); ctx.lineTo(cx + 24, cy - 60);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#93c5fd';
+        ctx.font = '11px monospace';
+        ctx.fillText('STATUS: BLUEPRINT_DESIGN_V1.0', cx - 90, cy + 85);
+        ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, cx - 90, cy + 102);
+      }
+      // Stage 2: Launchpad & Fueling (25-49%)
+      else if (stage === 2) {
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(cx - 80, cy - 100, 30, 200);
+        ctx.beginPath();
+        for (let y = cy - 100; y < cy + 100; y += 25) {
+          ctx.moveTo(cx - 80, y); ctx.lineTo(cx - 50, y + 25);
+          ctx.moveTo(cx - 50, y); ctx.lineTo(cx - 80, y + 25);
+        }
+        ctx.stroke();
+
+        drawRocketBody(ctx, cx, cy, 0);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.arc(cx - 30 + Math.sin(t * 3 + i) * 15, cy + 40 - (t * 60 + i * 20) % 80, 8 + i * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      // Stage 3: Ignition & Launch Blast (50-74%)
+      else if (stage === 3) {
+        const shake = (Math.random() - 0.5) * 6;
+        drawRocketBody(ctx, cx + shake, cy - 20, 0);
+
+        const flameY = cy + 50;
+        const grad = ctx.createLinearGradient(cx, flameY, cx, flameY + 90);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.3, '#f59e0b');
+        grad.addColorStop(1, '#ef4444');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(cx - 20, flameY);
+        ctx.quadraticCurveTo(cx - 35, flameY + 60, cx, flameY + 95 + Math.random() * 20);
+        ctx.quadraticCurveTo(cx + 35, flameY + 60, cx + 20, flameY);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(203, 213, 225, 0.6)';
+        for (let s = 0; s < 8; s++) {
+          ctx.beginPath();
+          ctx.arc(cx - 90 + s * 25 + Math.sin(t * 5 + s) * 10, h - 30, 24 + Math.random() * 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      // Stage 4: Stratosphere Ascent (75-99%)
+      else if (stage === 4) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 10; i++) {
+          const sx = (i * 45 + t * 400) % w;
+          const sy = (t * 800 + i * 70) % h;
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(sx, sy + 40);
+          ctx.stroke();
+        }
+
+        drawRocketBody(ctx, cx, cy - 40, -0.05);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.moveTo(cx - 14, cy + 30);
+        ctx.lineTo(cx, cy + 110);
+        ctx.lineTo(cx + 14, cy + 30);
+        ctx.fill();
+      }
+      // Stage 5: Orbiting Space & Nebula (100%)
+      else {
+        ctx.fillStyle = '#3b82f6';
+        ctx.beginPath();
+        ctx.arc(cx - 120, h + 40, 160, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let star = 0; star < 20; star++) {
+          const sx = (star * 73) % w;
+          const sy = (star * 47) % (h * 0.7);
+          ctx.fillStyle = star % 2 === 0 ? '#fef08a' : '#ffffff';
+          ctx.beginPath();
+          ctx.arc(sx, sy, 1.5 + Math.sin(t * 3 + star) * 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.save();
+        ctx.translate(cx + Math.sin(t) * 30, cy - 20 + Math.cos(t) * 15);
+        ctx.rotate(0.3);
+
+        ctx.fillStyle = '#1e3a8a';
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2;
+        ctx.fillRect(-75, -12, 45, 24);
+        ctx.strokeRect(-75, -12, 45, 24);
+        ctx.fillRect(30, -12, 45, 24);
+        ctx.strokeRect(30, -12, 45, 24);
+
+        drawRocketBody(ctx, 0, 0, 0);
+        ctx.restore();
+      }
+    }
+
+    function drawRocketBody(ctx, x, y, angle) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.moveTo(-20, 25);
+      ctx.lineTo(20, 25);
+      ctx.lineTo(20, -35);
+      ctx.quadraticCurveTo(0, -75, -20, -35);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(-12, -45);
+      ctx.lineTo(12, -45);
+      ctx.quadraticCurveTo(0, -75, -12, -45);
+      ctx.fill();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(0, -15, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(-20, 10); ctx.lineTo(-38, 30); ctx.lineTo(-20, 25); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(20, 10); ctx.lineTo(38, 30); ctx.lineTo(20, 25); ctx.fill();
+
+      ctx.restore();
+    }
+
+    // 🎂 3. Cake Preset (축하 케이크 굽기)
+    function drawCakeScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      if (stage === 1) {
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(cx, cy + 30, 60, 0, Math.PI);
+        ctx.fill();
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 30, 58, 20, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(cx, cy + 20);
+        ctx.rotate(t * 5);
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, 0); ctx.lineTo(0, -60);
+        ctx.stroke();
+        ctx.restore();
+      } else if (stage === 2) {
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(cx - 75, cy - 65, 150, 130);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(cx - 55, cy - 45, 110, 80);
+
+        const rise = Math.sin(t * 2) * 5;
+        ctx.fillStyle = '#d97706';
+        ctx.beginPath();
+        ctx.roundRect(cx - 40, cy - 10 - rise, 80, 40 + rise, [10, 10, 4, 4]);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.lineWidth = 2;
+        for (let i = -1; i <= 1; i++) {
+          ctx.beginPath();
+          ctx.moveTo(cx + i * 25, cy - 50);
+          ctx.quadraticCurveTo(cx + i * 25 + Math.sin(t * 3 + i) * 10, cy - 80, cx + i * 25, cy - 100);
+          ctx.stroke();
+        }
+      } else if (stage === 3) {
+        drawCakeLayer(ctx, cx, cy + 45, 110, 35, '#d97706', '#fdf2f8');
+        drawCakeLayer(ctx, cx, cy + 10, 90, 32, '#d97706', '#fdf2f8');
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.moveTo(cx + 40, cy - 50);
+        ctx.lineTo(cx + 80, cy - 80);
+        ctx.lineTo(cx + 60, cy - 30);
+        ctx.closePath();
+        ctx.fill();
+      } else if (stage === 4) {
+        drawCakeLayer(ctx, cx, cy + 45, 120, 35, '#fde047', '#ec4899');
+        drawCakeLayer(ctx, cx, cy + 10, 95, 32, '#fde047', '#ec4899');
+        drawCakeLayer(ctx, cx, cy - 22, 70, 30, '#fde047', '#ec4899');
+
+        for (let s = -2; s <= 2; s++) {
+          ctx.fillStyle = '#ef4444';
+          ctx.beginPath();
+          ctx.arc(cx + s * 14, cy - 38, 7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else {
+        drawCakeLayer(ctx, cx, cy + 50, 130, 38, '#fb7185', '#ffffff');
+        drawCakeLayer(ctx, cx, cy + 12, 100, 35, '#fb7185', '#ffffff');
+        drawCakeLayer(ctx, cx, cy - 23, 72, 32, '#fb7185', '#ffffff');
+
+        for (let s = -2; s <= 2; s++) {
+          ctx.fillStyle = '#ef4444';
+          ctx.beginPath();
+          ctx.arc(cx + s * 14, cy - 40, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        for (let c = -1; c <= 1; c++) {
+          const candleX = cx + c * 20;
+          const candleY = cy - 55;
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(candleX - 3, candleY, 6, 20);
+
+          const flicker = Math.sin(t * 10 + c) * 3;
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.ellipse(candleX, candleY - 8 + flicker * 0.5, 5, 8 + flicker, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#ef4444';
+          ctx.beginPath();
+          ctx.arc(candleX, candleY - 6, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawCakeLayer(ctx, x, y, width, height, spongeColor, creamColor) {
+      ctx.fillStyle = spongeColor;
+      ctx.beginPath();
+      ctx.roundRect(x - width / 2, y - height / 2, width, height, 8);
+      ctx.fill();
+
+      ctx.fillStyle = creamColor;
+      ctx.beginPath();
+      ctx.moveTo(x - width / 2, y - height / 2);
+      ctx.lineTo(x + width / 2, y - height / 2);
+      for (let i = width / 2; i >= -width / 2; i -= 15) {
+        ctx.quadraticCurveTo(x + i - 7.5, y - height / 2 + 12, x + i - 15, y - height / 2);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // 🐣 4. Pet Dragon Preset (드래곤 부화와 성장)
+    function drawPetScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      if (stage === 1) {
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 50, 70, 20, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        const rock = Math.sin(t * 3) * 0.08;
+        ctx.save();
+        ctx.translate(cx, cy + 20);
+        ctx.rotate(rock);
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 38, 52, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(-12, -15, 8, 0, Math.PI * 2);
+        ctx.arc(14, 10, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      } else if (stage === 2) {
+        const shake = (Math.random() - 0.5) * 4;
+        ctx.save();
+        ctx.translate(cx + shake, cy + 20);
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 38, 52, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#064e3b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-15, -20); ctx.lineTo(0, -5); ctx.lineTo(-8, 10); ctx.lineTo(12, 25);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-8, -5, 6, 0, Math.PI * 2);
+        ctx.arc(8, -5, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1f2937';
+        ctx.beginPath();
+        ctx.arc(-8, -5, 3.5, 0, Math.PI * 2);
+        ctx.arc(8, -5, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      } else if (stage === 3) {
+        const bounce = Math.sin(t * 4) * 6;
+        ctx.save();
+        ctx.translate(cx, cy + 20 + bounce);
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 32, 28, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#34d399';
+        ctx.beginPath();
+        ctx.ellipse(-30, -10, 16, 8, Math.sin(t * 8), 0, Math.PI * 2);
+        ctx.ellipse(30, -10, 16, 8, -Math.sin(t * 8), 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-10, -5, 7, 0, Math.PI * 2);
+        ctx.arc(10, -5, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#064e3b';
+        ctx.beginPath();
+        ctx.arc(-10, -5, 4, 0, Math.PI * 2);
+        ctx.arc(10, -5, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.arc(Math.sin(t * 5) * 15, 20 + Math.sin(t * 4) * 5, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      } else if (stage === 4) {
+        const hover = Math.sin(t * 3) * 15;
+        ctx.save();
+        ctx.translate(cx, cy - 10 + hover);
+
+        ctx.fillStyle = '#059669';
+        ctx.beginPath();
+        ctx.ellipse(-55, -20, 38, 18, -0.4 + Math.sin(t * 6) * 0.3, 0, Math.PI * 2);
+        ctx.ellipse(55, -20, 38, 18, 0.4 - Math.sin(t * 6) * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 42, 34, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.moveTo(-15, -25); ctx.lineTo(-28, -50); ctx.lineTo(-8, -25); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(15, -25); ctx.lineTo(28, -50); ctx.lineTo(8, -25); ctx.fill();
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.translate(cx, cy - 20 + Math.sin(t * 2) * 12);
+
+        const wingFlap = Math.sin(t * 4) * 0.4;
+        ctx.fillStyle = '#047857';
+        ctx.beginPath();
+        ctx.ellipse(-75, -25, 65, 25, -0.5 + wingFlap, 0, Math.PI * 2);
+        ctx.ellipse(75, -25, 65, 25, 0.5 - wingFlap, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 50, 38, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 12;
+        ctx.beginPath();
+        ctx.moveTo(0, 30);
+        ctx.quadraticCurveTo(-40, 60, -30, 80);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(-30, 80, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#eab308';
+        ctx.beginPath();
+        ctx.moveTo(-18, -28); ctx.lineTo(-38, -65); ctx.lineTo(-10, -28); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(18, -28); ctx.lineTo(38, -65); ctx.lineTo(10, -28); ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    // 🏃‍♂️ 5. Diet & Fitness Avatar Preset (다이어트 & 피트니스)
+    function drawFitnessScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      if (stage === 1) {
+        ctx.fillStyle = '#fb923c';
+        ctx.beginPath();
+        ctx.arc(cx, cy + 30, 55, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 40, 26, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(cx - 45, cy + 85, 90, 12);
+        ctx.fillRect(cx - 55, cy + 75, 14, 32);
+        ctx.fillRect(cx + 41, cy + 75, 14, 32);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(cx + 28, cy - 35 + (t * 50 % 30), 4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 2) {
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(cx - 80, cy + 75, 160, 14);
+
+        const runY = Math.sin(t * 8) * 6;
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 35 + runY, 24, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 18 + runY, 36, 40, 0.1, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 3) {
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 40, 22, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#3b82f6';
+        ctx.beginPath();
+        ctx.moveTo(cx - 28, cy - 15);
+        ctx.lineTo(cx + 28, cy - 15);
+        ctx.lineTo(cx + 18, cy + 45);
+        ctx.lineTo(cx - 18, cy + 45);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#eab308';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 10, 65, 80 + Math.sin(t * 12) * 20, 0, 0, Math.PI);
+        ctx.stroke();
+      } else if (stage === 4) {
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 40, 22, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(cx - 24, cy - 50, 48, 8);
+
+        ctx.fillStyle = '#2563eb';
+        ctx.beginPath();
+        ctx.moveTo(cx - 38, cy - 15);
+        ctx.lineTo(cx + 38, cy - 15);
+        ctx.lineTo(cx + 15, cy + 48);
+        ctx.lineTo(cx - 15, cy + 48);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx - 45, cy - 15, 14, 0, Math.PI * 2);
+        ctx.arc(cx + 45, cy - 15, 14, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        const auraPulse = Math.sin(t * 4) * 8;
+        ctx.fillStyle = 'rgba(234, 179, 8, 0.25)';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 95 + auraPulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 45, 22, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(cx - 24, cy - 55, 48, 8);
+
+        ctx.fillStyle = '#1e3a8a';
+        ctx.beginPath();
+        ctx.moveTo(cx - 40, cy - 20);
+        ctx.lineTo(cx + 40, cy - 20);
+        ctx.lineTo(cx + 16, cy + 48);
+        ctx.lineTo(cx - 16, cy + 48);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(cx - 15, cy - 20); ctx.lineTo(cx, cy + 5); ctx.lineTo(cx + 15, cy - 20);
+        ctx.stroke();
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(cx, cy + 10, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(cx - 60, cy - 35, 16, 24);
+        ctx.fillRect(cx + 44, cy - 35, 16, 24);
+      }
+    }
+
+
+    /* ==========================================================
+       9.1 DEDICATED AI SCENE GRAPHIC ENGINES (Rock Climbing, Study, Marathon, Farming, Wealth, Creature, Universal)
+       ========================================================== */
+
+    // 🧗 1. Rock Climbing Scene Engine (암벽등반 & 정상 정복 5단계)
+    function drawClimbingScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      // 1. Dynamic Sky Background based on altitude/stage
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+      if (stage === 1) {
+        skyGrad.addColorStop(0, '#38bdf8'); skyGrad.addColorStop(1, '#bae6fd');
+      } else if (stage === 2) {
+        skyGrad.addColorStop(0, '#0284c7'); skyGrad.addColorStop(1, '#7dd3fc');
+      } else if (stage === 3) {
+        skyGrad.addColorStop(0, '#1e3a8a'); skyGrad.addColorStop(1, '#60a5fa');
+      } else if (stage === 4) {
+        skyGrad.addColorStop(0, '#4c1d95'); skyGrad.addColorStop(0.5, '#ea580c'); skyGrad.addColorStop(1, '#fde047');
+      } else {
+        skyGrad.addColorStop(0, '#0f172a'); skyGrad.addColorStop(0.4, '#312e81'); skyGrad.addColorStop(1, '#f59e0b');
+      }
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Distant mountain ranges in background
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.45)';
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.7);
+      ctx.lineTo(w * 0.25, h * 0.45);
+      ctx.lineTo(w * 0.5, h * 0.65);
+      ctx.lineTo(w * 0.8, h * 0.35);
+      ctx.lineTo(w, h * 0.6);
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // Clouds floating across scene
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      for (let c = 0; c < 3; c++) {
+        const cloudX = ((c * 160 + t * 40) % (w + 140)) - 70;
+        const cloudY = 40 + c * 50;
+        ctx.beginPath();
+        ctx.arc(cloudX, cloudY, 22, 0, Math.PI * 2);
+        ctx.arc(cloudX + 20, cloudY - 8, 28, 0, Math.PI * 2);
+        ctx.arc(cloudX + 45, cloudY, 20, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // STAGE 1: Mountain Basecamp & Looking Up (0-24%)
+      if (stage === 1) {
+        // Ground slope
+        const groundY = h * 0.76;
+        ctx.fillStyle = '#3f6212';
+        ctx.fillRect(0, groundY, w, h - groundY);
+
+        // Huge Towering Cliff Wall on right
+        ctx.fillStyle = '#475569';
+        ctx.beginPath();
+        ctx.moveTo(w * 0.45, h);
+        ctx.lineTo(w * 0.55, 0);
+        ctx.lineTo(w, 0);
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Rock Holds on cliff
+        const holds = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+        for (let r = 0; r < 8; r++) {
+          ctx.fillStyle = holds[r % holds.length];
+          ctx.beginPath();
+          ctx.roundRect(w * 0.62 + (r % 3) * 35, 30 + r * 30, 14, 8, 3);
+          ctx.fill();
+        }
+
+        // Basecamp Tent
+        ctx.fillStyle = '#ea580c';
+        ctx.beginPath();
+        ctx.moveTo(cx - 100, groundY + 15);
+        ctx.lineTo(cx - 50, groundY - 35);
+        ctx.lineTo(cx, groundY + 15);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#7c2d12';
+        ctx.beginPath();
+        ctx.moveTo(cx - 50, groundY - 35);
+        ctx.lineTo(cx - 50, groundY + 15);
+        ctx.lineTo(cx - 30, groundY + 15);
+        ctx.closePath();
+        ctx.fill();
+
+        // Climber standing at base looking up with helmet & harness
+        const climberX = cx - 10;
+        const climberY = groundY - 10;
+        drawClimberFigure(ctx, climberX, climberY, 'standing', t);
+
+        // Speech/Thought: "정상을 향해 출발!"
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('🧗‍♂️ "저 높은 정상을 정복하자!"', climberX - 55, climberY - 52);
+      }
+
+      // STAGE 2: Lower Wall Ascent & Chalk Dust (25-49%)
+      else if (stage === 2) {
+        // Full Rock Wall Background
+        drawFullRockWall(ctx, w, h);
+
+        // Climbing Climber at lower third
+        const climberX = cx - 10;
+        const climberY = h * 0.65 + Math.sin(t * 3) * 4;
+
+        // Safety Rope extending down
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(climberX, climberY + 10);
+        ctx.quadraticCurveTo(climberX + 15, h * 0.85, climberX - 20, h);
+        ctx.stroke();
+
+        drawClimberFigure(ctx, climberX, climberY, 'climbing-up', t);
+
+        // Floating white chalk dust particles
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        for (let p = 0; p < 6; p++) {
+          ctx.beginPath();
+          ctx.arc(climberX + 18 + Math.sin(t * 4 + p) * 10, climberY - 10 + (t * 40 + p * 15) % 35, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // STAGE 3: Mid-Cliff Overhang & Abyss (50-74%)
+      else if (stage === 3) {
+        // Dramatic Overhang Wall with dark abyss below
+        drawFullRockWall(ctx, w, h);
+
+        // Overhang roof rock ledge
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(cx - 90, h * 0.3);
+        ctx.lineTo(cx + 60, h * 0.4);
+        ctx.lineTo(cx - 90, h * 0.5);
+        ctx.closePath();
+        ctx.fill();
+
+        // Clouds passing right under climber feet
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.beginPath();
+        ctx.ellipse(cx, h * 0.82, 130, 24, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Climber hanging dynamically on overhang
+        const climberX = cx - 15;
+        const climberY = h * 0.42 + Math.sin(t * 4) * 6;
+
+        // Rope swinging in abyss
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(climberX, climberY + 10);
+        ctx.quadraticCurveTo(climberX + Math.sin(t * 3) * 30, h * 0.7, climberX - 10, h);
+        ctx.stroke();
+
+        drawClimberFigure(ctx, climberX, climberY, 'overhang', t);
+      }
+
+      // STAGE 4: Near-Summit Ridge & Pulling Up (75-99%)
+      else if (stage === 4) {
+        // Sunset Peak Ridge
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.45);
+        ctx.lineTo(cx + 50, h * 0.35);
+        ctx.lineTo(w, h * 0.55);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Climber reaching top edge with one arm
+        const climberX = cx + 25;
+        const climberY = h * 0.37 + Math.sin(t * 3) * 4;
+
+        drawClimberFigure(ctx, climberX, climberY, 'reaching-top', t);
+
+        // Sun Flare on horizon
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.35)';
+        ctx.beginPath();
+        ctx.arc(cx + 50, h * 0.32, 60 + Math.sin(t * 5) * 8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // STAGE 5: Summit Victory Flag & Celebration (100% / D-Day)
+      else {
+        // Sharp Mountain Summit Peak
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(cx - 110, h);
+        ctx.lineTo(cx, h * 0.45);
+        ctx.lineTo(cx + 110, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Snow cap on peak
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(cx - 35, h * 0.58);
+        ctx.lineTo(cx, h * 0.45);
+        ctx.lineTo(cx + 35, h * 0.58);
+        ctx.quadraticCurveTo(cx, h * 0.62, cx - 35, h * 0.58);
+        ctx.closePath();
+        ctx.fill();
+
+        // Golden Victory Sunburst
+        const sunPulse = Math.sin(t * 4) * 12;
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.28)';
+        ctx.beginPath();
+        ctx.arc(cx, h * 0.42, 85 + sunPulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Climber standing on peak in victory pose
+        const climberX = cx - 15;
+        const climberY = h * 0.42;
+        drawClimberFigure(ctx, climberX, climberY, 'victory-summit', t);
+
+        // Large Victory Flag on Pole flapping in wind
+        const poleX = cx + 20;
+        const poleY = h * 0.45;
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(poleX, poleY);
+        ctx.lineTo(poleX, poleY - 65);
+        ctx.stroke();
+
+        // Red/Gold Triangular Flag flapping
+        const flap = Math.sin(t * 8) * 6;
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.moveTo(poleX, poleY - 65);
+        ctx.lineTo(poleX + 42 + flap, poleY - 50);
+        ctx.lineTo(poleX, poleY - 35);
+        ctx.closePath();
+        ctx.fill();
+
+        // Gold Star on Flag
+        ctx.fillStyle = '#fef08a';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('★ D-Day', poleX + 4, poleY - 47);
+
+        // Soaring Golden Eagle in Sky
+        const eagleX = (cx - 100 + t * 50) % w;
+        const eagleY = 40 + Math.sin(t * 3) * 10;
+        ctx.fillStyle = '#ca8a04';
+        ctx.beginPath();
+        ctx.moveTo(eagleX, eagleY);
+        ctx.lineTo(eagleX - 16, eagleY - 8);
+        ctx.lineTo(eagleX - 6, eagleY + 2);
+        ctx.lineTo(eagleX, eagleY);
+        ctx.lineTo(eagleX + 6, eagleY + 2);
+        ctx.lineTo(eagleX + 16, eagleY - 8);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    function drawFullRockWall(ctx, w, h) {
+      // Rocky wall texture
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(0, 0, w, h);
+
+      // Jagged Rock Cracks & Holds
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.3, 0); ctx.lineTo(w * 0.35, h * 0.4); ctx.lineTo(w * 0.28, h);
+      ctx.moveTo(w * 0.7, 0); ctx.lineTo(w * 0.65, h * 0.6); ctx.lineTo(w * 0.72, h);
+      ctx.stroke();
+
+      // Colorful Climbing Holds
+      const holdColors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#a855f7', '#ec4899'];
+      for (let i = 0; i < 15; i++) {
+        const hx = ((i * 67 + 30) % (w - 60)) + 30;
+        const hy = ((i * 43 + 20) % (h - 40)) + 20;
+        ctx.fillStyle = holdColors[i % holdColors.length];
+        ctx.beginPath();
+        ctx.roundRect(hx, hy, 16, 10, 4);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillRect(hx + 2, hy + 2, 4, 3);
+      }
+    }
+
+    function drawClimberFigure(ctx, x, y, pose, t) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Yellow Helmet & Head
+      ctx.fillStyle = '#fed7aa';
+      ctx.beginPath();
+      ctx.arc(0, -22, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Yellow Safety Helmet
+      ctx.fillStyle = '#eab308';
+      ctx.beginPath();
+      ctx.arc(0, -24, 11, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      // Torso (Orange Climber Shirt)
+      ctx.fillStyle = '#ea580c';
+      ctx.beginPath();
+      ctx.roundRect(-8, -12, 16, 20, 4);
+      ctx.fill();
+
+      // Harness (Black)
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-8, 4, 16, 5);
+
+      if (pose === 'standing') {
+        // Legs
+        ctx.strokeStyle = '#1e3a8a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-5, 8); ctx.lineTo(-7, 26);
+        ctx.moveTo(5, 8); ctx.lineTo(7, 26);
+        ctx.stroke();
+
+        // Arms looking up
+        ctx.strokeStyle = '#fed7aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -8); ctx.lineTo(-18, -16);
+        ctx.moveTo(8, -8); ctx.lineTo(18, -16);
+        ctx.stroke();
+      } else if (pose === 'climbing-up') {
+        // Dynamic climbing arms reaching holds
+        ctx.strokeStyle = '#fed7aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -8); ctx.lineTo(-18, -28 + Math.sin(t * 6) * 4);
+        ctx.moveTo(8, -8); ctx.lineTo(16, -22);
+        ctx.stroke();
+
+        // Legs on holds
+        ctx.strokeStyle = '#1e3a8a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-5, 8); ctx.lineTo(-16, 18); ctx.lineTo(-18, 26);
+        ctx.moveTo(5, 8); ctx.lineTo(12, 22); ctx.lineTo(8, 30);
+        ctx.stroke();
+      } else if (pose === 'overhang') {
+        // Hanging horizontally on overhang
+        ctx.strokeStyle = '#fed7aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -8); ctx.lineTo(-12, -28);
+        ctx.moveTo(8, -8); ctx.lineTo(12, -28);
+        ctx.stroke();
+
+        // Bent legs finding foothold
+        ctx.strokeStyle = '#1e3a8a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-5, 8); ctx.lineTo(-18, 14); ctx.lineTo(-24, 8);
+        ctx.moveTo(5, 8); ctx.lineTo(14, 18); ctx.lineTo(18, 28);
+        ctx.stroke();
+      } else if (pose === 'reaching-top') {
+        // One arm pulling up over ledge
+        ctx.strokeStyle = '#fed7aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -8); ctx.lineTo(-14, -30);
+        ctx.moveTo(8, -8); ctx.lineTo(20, -10);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#1e3a8a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-5, 8); ctx.lineTo(-8, 22);
+        ctx.moveTo(5, 8); ctx.lineTo(14, 16);
+        ctx.stroke();
+      } else {
+        // Victory Summit Pose (Both Arms Raised High!)
+        ctx.strokeStyle = '#fed7aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -8); ctx.lineTo(-22, -32);
+        ctx.moveTo(8, -8); ctx.lineTo(22, -32);
+        ctx.stroke();
+
+        // Strong Standing Legs
+        ctx.strokeStyle = '#1e3a8a';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-5, 8); ctx.lineTo(-10, 24);
+        ctx.moveTo(5, 8); ctx.lineTo(10, 24);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // 🎓 2. Study / Exam / Coding / App Scene Engine
+    function drawStudyExamScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const deskY = h * 0.72;
+
+      // Wooden Desk
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(0, deskY, w, h - deskY);
+
+      if (stage === 1) {
+        // Open textbook
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.roundRect(cx - 60, deskY - 25, 120, 40, 4);
+        ctx.fill();
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, deskY - 25); ctx.lineTo(cx, deskY + 15);
+        ctx.stroke();
+
+        // Pencil & mug
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(cx + 70, deskY - 20, 6, 30);
+      } else if (stage === 2) {
+        // Glowing study lamp
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(cx - 100, deskY - 90, 8, 90);
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(cx - 100, deskY - 90, 35, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tower of books
+        for (let b = 0; b < 4; b++) {
+          ctx.fillStyle = ['#ef4444', '#3b82f6', '#10b981', '#8b5cf6'][b];
+          ctx.fillRect(cx + 30, deskY - 12 - b * 16, 65, 14);
+        }
+      } else if (stage === 3) {
+        // Ticking Clock & Focus Brainwaves
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(cx, deskY - 80, 35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Clock hands
+        ctx.beginPath();
+        ctx.moveTo(cx, deskY - 80);
+        ctx.lineTo(cx + Math.cos(t * 6) * 22, deskY - 80 + Math.sin(t * 6) * 22);
+        ctx.stroke();
+
+        // Checkmarks floating
+        ctx.fillStyle = '#22c55e';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText('✓ 100%', cx + 55, deskY - 60 + Math.sin(t * 4) * 8);
+      } else if (stage === 4) {
+        // 100 Points Exam Paper
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(cx - 50, deskY - 90, 100, 120, 6);
+        ctx.fill();
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 36px sans-serif';
+        ctx.fillText('100', cx - 28, deskY - 30);
+      } else {
+        // Graduation Cap & Victory Trophy
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(cx - 45, deskY - 80 + Math.sin(t * 3) * 10);
+        ctx.lineTo(cx, deskY - 100 + Math.sin(t * 3) * 10);
+        ctx.lineTo(cx + 45, deskY - 80 + Math.sin(t * 3) * 10);
+        ctx.lineTo(cx, deskY - 60 + Math.sin(t * 3) * 10);
+        ctx.closePath();
+        ctx.fill();
+
+        // Golden Trophy
+        ctx.fillStyle = '#eab308';
+        ctx.beginPath();
+        ctx.arc(cx, deskY - 15, 24, 0, Math.PI);
+        ctx.fill();
+        ctx.fillRect(cx - 8, deskY - 15, 16, 25);
+        ctx.fillRect(cx - 24, deskY + 10, 48, 10);
+      }
+    }
+
+    // 🏃 3. Marathon / Sports Scene Engine
+    function drawMarathonSportsScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const roadY = h * 0.74;
+
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(0, roadY, w, h - roadY);
+
+      if (stage === 1) {
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillRect(cx - 100, roadY - 70, 200, 18);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('START LINE', cx - 35, roadY - 56);
+      } else if (stage === 2 || stage === 3 || stage === 4) {
+        const runX = cx + Math.sin(t * 6) * 30;
+        const runY = roadY - 30 + Math.abs(Math.sin(t * 12)) * 8;
+        ctx.fillStyle = '#3b82f6';
+        ctx.beginPath();
+        ctx.arc(runX, runY, 18, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Finish ribbon & gold medal
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(0, roadY - 40, w, 12);
+        ctx.fillStyle = '#eab308';
+        ctx.beginPath();
+        ctx.arc(cx, roadY - 60, 28, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 🍎 4. Farming / Tree Scene Engine
+    function drawFarmingGrowthScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const groundY = h * 0.78;
+
+      ctx.fillStyle = '#3f6212';
+      ctx.fillRect(0, groundY, w, h - groundY);
+
+      if (stage === 1) {
+        ctx.fillStyle = '#854d0e';
+        ctx.beginPath();
+        ctx.arc(cx, groundY + 20, 12, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 2) {
+        ctx.strokeStyle = '#4ade80';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(cx, groundY); ctx.lineTo(cx, groundY - 50);
+        ctx.stroke();
+      } else if (stage === 3 || stage === 4) {
+        ctx.fillStyle = '#15803d';
+        ctx.beginPath();
+        ctx.arc(cx, groundY - 70, 55, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (stage === 4) {
+          for (let a = 0; a < 6; a++) {
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(cx - 30 + (a % 3) * 30, groundY - 90 + Math.floor(a / 3) * 30, 9, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      } else {
+        // Full Golden Harvest
+        ctx.fillStyle = '#16a34a';
+        ctx.beginPath();
+        ctx.arc(cx, groundY - 80, 65, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let a = 0; a < 8; a++) {
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(cx - 40 + (a % 4) * 26, groundY - 100 + Math.floor(a / 4) * 35, 11, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // 🐧 5. Creature / Adventure Scene Engine
+    function drawCreatureAdventureScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const groundY = h * 0.78;
+
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(0, groundY, w, h - groundY);
+
+      if (stage === 1) {
+        ctx.fillStyle = '#e0f2fe';
+        ctx.beginPath();
+        ctx.ellipse(cx, groundY - 20, 25, 35, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 2) {
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(cx, groundY - 25, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(cx, groundY - 22, 12, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 3 || stage === 4) {
+        const slideY = groundY - 25 + Math.sin(t * 6) * 10;
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.ellipse(cx, slideY, 30, 20, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Majestic Sea Diving & Crown
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 70, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#eab308';
+        ctx.beginPath();
+        ctx.moveTo(cx - 20, cy - 60); ctx.lineTo(cx - 30, cy - 85); ctx.lineTo(cx, cy - 65);
+        ctx.lineTo(cx + 30, cy - 85); ctx.lineTo(cx + 20, cy - 60);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    // 💰 6. Wealth / Savings Scene Engine
+    function drawWealthSavingsScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+
+      if (stage === 1) {
+        // Piggy bank
+        ctx.fillStyle = '#ec4899';
+        ctx.beginPath();
+        ctx.arc(cx, cy + 20, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 40 + (t * 60 % 40), 10, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 2 || stage === 3) {
+        // Stacking Coins
+        for (let col = -1; col <= 1; col++) {
+          for (let row = 0; row < (stage === 2 ? 3 : 6); row++) {
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.roundRect(cx + col * 40 - 15, cy + 50 - row * 15, 30, 10, 4);
+            ctx.fill();
+          }
+        }
+      } else {
+        // Gold Castle & Vault
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(cx - 70, cy - 30, 140, 90);
+        ctx.fillStyle = '#ca8a04';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 30, 70, Math.PI, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // ✨ 7. Universal Adaptive Scene Engine
+    function drawUniversalAdaptiveScene(ctx, theme, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const stageIdx = Math.min(4, Math.max(0, stage - 1));
+      const stageInfo = theme.stages[stageIdx] || theme.stages[0];
+
+      // Pedestal Base
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.8)';
+      ctx.beginPath();
+      ctx.roundRect(cx - 100, cy + 50, 200, 30, 10);
+      ctx.fill();
+
+      // Ascension Energy Ring
+      const ringRadius = 45 + stageIdx * 14 + Math.sin(t * 4) * 6;
+      ctx.strokeStyle = theme.color || '#eab308';
+      ctx.lineWidth = 3.5;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.arc(cx, cy - 10, ringRadius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Floating Center Thematic Icon
+      ctx.save();
+      ctx.font = `${52 + stageIdx * 10}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const bounce = Math.sin(t * 4) * 8;
+      ctx.fillText(stageInfo.icon || '⭐', cx, cy - 15 + bounce);
+      ctx.restore();
+    }
+
+    // ✨ Main AI Scene Dispatcher
+    function drawAiDynamicScene(ctx, theme, stage, w, h, time) {
+      const cx = w / 2;
+      const cy = h / 2;
+      const metrics = { stage, progress: (stage - 1) * 25 };
+
+      const textCorpus = ((theme.title || '') + ' ' + (theme.desc || '') + ' ' + (theme.archetype || '')).toLowerCase();
+
+      if (textCorpus.includes('암벽') || textCorpus.includes('등반') || textCorpus.includes('등산') || textCorpus.includes('정상') || textCorpus.includes('클라이밍') || textCorpus.includes('산') || textCorpus.includes('climb') || textCorpus.includes('mountain') || textCorpus.includes('summit')) {
+        drawClimbingScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('공부') || textCorpus.includes('시험') || textCorpus.includes('자격증') || textCorpus.includes('합격') || textCorpus.includes('코딩') || textCorpus.includes('개발') || textCorpus.includes('책') || textCorpus.includes('study') || textCorpus.includes('exam')) {
+        drawStudyExamScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('마라톤') || textCorpus.includes('러닝') || textCorpus.includes('달리기') || textCorpus.includes('축구') || textCorpus.includes('수영') || textCorpus.includes('run') || textCorpus.includes('marathon')) {
+        drawMarathonSportsScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('사과') || textCorpus.includes('나무') || textCorpus.includes('농사') || textCorpus.includes('식물') || textCorpus.includes('수확') || textCorpus.includes('과일') || textCorpus.includes('tree') || textCorpus.includes('plant')) {
+        drawFarmingGrowthScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('펭귄') || textCorpus.includes('동물') || textCorpus.includes('바다') || textCorpus.includes('새') || textCorpus.includes('penguin') || textCorpus.includes('animal')) {
+        drawCreatureAdventureScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('저축') || textCorpus.includes('돈') || textCorpus.includes('부자') || textCorpus.includes('재테크') || textCorpus.includes('money') || textCorpus.includes('wealth')) {
+        drawWealthSavingsScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else {
+        drawUniversalAdaptiveScene(ctx, theme, stage, metrics.progress, cx, cy, w, h, time);
+      }
+    }
+
+
+    /* ==========================================================
+       10. CONFETTI & PARTICLES ENGINE
+       ========================================================== */
+    function triggerConfetti() {
+      triggerConfettiParticles(60);
+      playCrystalBell();
+    }
+
+    function triggerConfettiParticles(count) {
+      if (!mainCanvas) return;
+      const w = mainCanvas.parentElement.clientWidth;
+      const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#fef08a'];
+
+      for (let i = 0; i < count; i++) {
+        mainParticles.push({
+          x: w / 2 + (Math.random() - 0.5) * 100,
+          y: 80 + Math.random() * 50,
+          vx: (Math.random() - 0.5) * 350,
+          vy: -150 - Math.random() * 250,
+          size: 5 + Math.random() * 7,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 10,
+          life: 1.0,
+          decay: 0.35 + Math.random() * 0.4
+        });
+      }
+    }
+
+    function updateAndDrawParticles(ctx, w, h, dt) {
+      for (let i = mainParticles.length - 1; i >= 0; i--) {
+        const p = mainParticles[i];
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += 450 * dt; // gravity
+        p.rotation += p.vRot * dt;
+        p.life -= p.decay * dt;
+
+        if (p.life <= 0 || p.y > h + 20) {
+          mainParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      }
+    }
+
+
+    /* ==========================================================
+       11. FORM CREATION & THEME MANAGEMENT
+       ========================================================== */
+    function initDefaultFormDates() {
+      const today = new Date();
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 7);
+
+      const pad = n => String(n).padStart(2, '0');
+      const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+      const nextWeekStr = `${nextWeek.getFullYear()}-${pad(nextWeek.getMonth() + 1)}-${pad(nextWeek.getDate())}`;
+
+      document.getElementById('formStartDate').value = todayStr;
+      document.getElementById('formTargetDate').value = nextWeekStr;
+      document.getElementById('formTargetTime').value = '18:00';
+    }
+
+    function selectThemeCard(themeId) {
+      const cards = document.querySelectorAll('.theme-select-card');
+      cards.forEach(c => {
+        const radio = c.querySelector('input[type="radio"]');
+        if (radio) {
+          if (radio.value === themeId) {
+            radio.checked = true;
+            c.className = 'theme-select-card p-3.5 rounded-xl themed-inner border cursor-pointer transition-all flex flex-col justify-between relative border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10 shadow-md scale-[1.01]';
+          } else {
+            radio.checked = false;
+            c.className = 'theme-select-card p-3.5 rounded-xl themed-inner border cursor-pointer transition-all flex flex-col justify-between relative border-transparent hover:border-indigo-400/40 opacity-80 hover:opacity-100';
+          }
+        }
+      });
+      playToneFeedback(580, 0.04);
+    }
+
+    function selectRingtoneCard(ringtoneVal) {
+      const cards = document.querySelectorAll('.ringtone-select-card');
+      cards.forEach(c => {
+        const radio = c.querySelector('input[type="radio"]');
+        if (radio) {
+          if (radio.value === ringtoneVal) {
+            radio.checked = true;
+            c.className = 'ringtone-select-card flex items-center justify-between p-3.5 rounded-xl themed-inner border cursor-pointer transition-all border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10 shadow-md scale-[1.01]';
+          } else {
+            radio.checked = false;
+            c.className = 'ringtone-select-card flex items-center justify-between p-3.5 rounded-xl themed-inner border cursor-pointer transition-all border-transparent hover:border-indigo-400/40 opacity-80 hover:opacity-100';
+          }
+        }
+      });
+      playToneFeedback(520, 0.04);
+    }
+
+    function renderThemeSelectionList(selectedId = null) {
+      const grid = document.getElementById('themeSelectionGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const allThemes = [...BUILTIN_PRESETS, ...state.aiThemes];
+      const activeThemeId = selectedId || (state.activeAlarm ? state.activeAlarm.themeId : 'flower');
+
+      allThemes.forEach(theme => {
+        const isSelected = theme.id === activeThemeId;
+        const isAi = theme.id.startsWith('ai-');
+
+        const card = document.createElement('label');
+        card.id = `themeCard-${theme.id}`;
+        card.className = `theme-select-card p-3.5 rounded-xl themed-inner border cursor-pointer transition-all flex flex-col justify-between relative ${isSelected ? 'border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-500/10 shadow-md scale-[1.01]' : 'border-transparent hover:border-indigo-400/40 opacity-80 hover:opacity-100'}`;
+        card.onclick = (e) => {
+          if (e.target.closest('button')) return;
+          selectThemeCard(theme.id);
+        };
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">${theme.icon || '✨'}</span>
+              <div>
+                <div class="font-extrabold text-xs flex items-center gap-1.5">
+                  <span>${theme.title}</span>
+                  ${isAi ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-black font-black">[AI]</span>' : ''}
+                </div>
+                <div class="text-[11px] themed-subtext line-clamp-1 mt-0.5">${theme.desc}</div>
+              </div>
+            </div>
+            <input type="radio" name="formThemeId" value="${theme.id}" ${isSelected ? 'checked' : ''} onchange="selectThemeCard('${theme.id}')" class="text-indigo-600 focus:ring-indigo-500 mt-1 cursor-pointer">
+          </div>
+
+          <div class="flex items-center justify-between mt-3 pt-2 border-t themed-border text-[10px] themed-subtext">
+            <span class="truncate">5단계: ${theme.stages ? theme.stages[4].text : '완성'}</span>
+            ${isAi ? `<button type="button" onclick="deleteAiTheme('${theme.id}', event)" class="text-red-400 hover:text-red-300 font-bold px-1 py-0.5 rounded hover:bg-red-500/10" title="AI 테마 삭제"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    function handleCreateAlarm(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('formTitle').value.trim();
+      const category = document.getElementById('formCategory').value;
+      const targetDate = document.getElementById('formTargetDate').value;
+      const targetTime = document.getElementById('formTargetTime').value;
+      const startDate = document.getElementById('formStartDate').value;
+      const ringtone = document.querySelector('input[name="formRingtone"]:checked').value;
+      const themeId = document.querySelector('input[name="formThemeId"]:checked').value;
+      const memo = document.getElementById('formMemo').value.trim();
+
+      const targetIso = new Date(`${targetDate}T${targetTime}:00`).toISOString();
+      const startIso = startDate ? new Date(`${startDate}T00:00:00`).toISOString() : new Date().toISOString();
+
+      state.activeAlarm = {
+        id: 'alarm-' + Date.now(),
+        title,
+        category,
+        startDate: startIso,
+        targetDate: targetIso,
+        ringtone,
+        themeId,
+        memo,
+        createdAt: new Date().toISOString(),
+        isCompleted: false
+      };
+
+      state.virtualProgressBoost = 0;
+      saveActiveAlarm();
+      renderActiveAlarmView();
+      switchTab('active');
+      triggerConfettiParticles(50);
+      playCrystalBell();
+    }
+
+    function deleteAiTheme(themeId, evt) {
+      if (evt) evt.stopPropagation();
+      if (!confirm('이 AI 테마를 삭제하시겠습니까?')) return;
+
+      state.aiThemes = state.aiThemes.filter(t => t.id !== themeId);
+      saveAiThemes();
+    }
+
+
+    /* ==========================================================
+       12. ALARM HISTORY LOG MANAGEMENT
+       ========================================================== */
+    function renderHistoryList() {
+      const container = document.getElementById('historyListContainer');
+      const badge = document.getElementById('historyCountBadge');
+      if (!container) return;
+
+      if (badge) badge.textContent = state.history.length;
+
+      if (state.history.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 themed-inner rounded-xl border dashed themed-border">
+            <i class="fa-solid fa-clock-rotate-left text-3xl themed-subtext opacity-40 mb-2"></i>
+            <p class="text-xs font-bold themed-subtext">저장된 알람 히스토리가 없습니다.</p>
+            <p class="text-[11px] opacity-60 mt-0.5">목표를 완료하거나 리셋하면 이곳에 기록됩니다.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.history.map(item => {
+        const theme = getThemeById(item.themeId);
+        const compDate = item.completedAt ? formatDateSimple(new Date(item.completedAt)) : '완료됨';
+
+        return `
+          <div class="p-4 rounded-xl themed-inner border themed-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-indigo-500/40 transition-all">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-indigo-500/20 text-indigo-400">
+                  ${getCategoryWithIcon(item.category)}
+                </span>
+                <span class="text-xs font-bold text-white">${item.title}</span>
+                <span class="text-[11px] themed-subtext">(${theme ? theme.icon + ' ' + theme.title : '기본'})</span>
+              </div>
+              <p class="text-xs themed-subtext italic">${item.memo ? `"${item.memo}"` : '메모 없음'}</p>
+              <div class="text-[10px] opacity-60 flex items-center gap-2">
+                <span>완료일: ${compDate}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button onclick="reRegisterFromHistory('${item.id}')" 
+                      class="px-3 py-1.5 rounded-lg themed-btn-primary text-xs font-bold flex items-center gap-1">
+                <i class="fa-solid fa-arrow-rotate-right"></i>
+                <span>재등록</span>
+              </button>
+              <button onclick="deleteHistoryItem('${item.id}')" 
+                      class="px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs" title="삭제">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function reRegisterFromHistory(histId) {
+      const item = state.history.find(h => h.id === histId);
+      if (!item) return;
+
+      document.getElementById('formTitle').value = item.title;
+      document.getElementById('formCategory').value = item.category || '기념일/이벤트';
+      document.getElementById('formMemo').value = item.memo || '';
+
+      renderThemeSelectionList(item.themeId);
+      selectRingtoneCard(item.ringtone || 'crystal-bell');
+      switchTab('create');
+      playToneFeedback(540, 0.08);
+    }
+
+    function deleteHistoryItem(histId) {
+      state.history = state.history.filter(h => h.id !== histId);
+      saveHistory();
+    }
+
+    function clearAllHistory() {
+      if (state.history.length === 0) return;
+      if (!confirm('모든 알람 히스토리를 비우시겠습니까?')) return;
+      state.history = [];
+      saveHistory();
+      playToneFeedback(380, 0.1);
+    }
+
+
+    /* ==========================================================
+       13. GEMINI FLASH AI INTEGRATION & PROMPT GENERATOR
+       ========================================================== */
+    function setAiPromptText(txt) {
+      const input = document.getElementById('aiConceptInput');
+      if (input) input.value = txt;
+      playToneFeedback(600, 0.05);
+    }
+
+    async function handleGenerateAiTheme(e) {
+      e.preventDefault();
+      const concept = document.getElementById('aiConceptInput').value.trim();
+      if (!concept) return;
+
+      const loadingEl = document.getElementById('aiLoadingIndicator');
+      const resultEl = document.getElementById('aiResultSection');
+      const generateBtn = document.getElementById('aiGenerateBtn');
+
+      loadingEl.classList.remove('hidden');
+      resultEl.classList.add('hidden');
+      generateBtn.disabled = true;
+
+      try {
+        const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
+        let themeResult = null;
+
+        if (apiKey && apiKey.startsWith('AIzaSy')) {
+          // Call Real Gemini API (gemini-2.5-flash)
+          themeResult = await callGeminiApi(apiKey, concept);
+        } else {
+          // Smart Offline Fallback Generator
+          await new Promise(r => setTimeout(r, 800)); // realistic thinking delay
+          themeResult = generateSmartFallbackTheme(concept);
+        }
+
+        state.tempAiGeneratedTheme = themeResult;
+        renderAiResultSection(themeResult);
+
+      } catch (err) {
+        console.error('Gemini Generation error:', err);
+        const fallback = generateSmartFallbackTheme(concept);
+        state.tempAiGeneratedTheme = fallback;
+        renderAiResultSection(fallback);
+      } finally {
+        loadingEl.classList.add('hidden');
+        generateBtn.disabled = false;
+      }
+    }
+
+    async function callGeminiApi(apiKey, userConcept) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+      const systemPrompt = `You are an expert creative storyteller and game designer.
+Create an inspiring 5-stage D-Day countdown progress theme based on the user's concept.
+Return strictly valid JSON matching this schema:
+{
+  "storyTitle": "Short title in Korean (max 18 chars)",
+  "storyDesc": "Inspiring summary in Korean (max 40 chars)",
+  "themeColor": "#hexColor",
+  "archetype": "climbing | study | marathon | farming | creature | wealth | universal",
+  "stages": [
+    { "icon": "emoji", "percent": 0, "text": "1단계 한국어 설명" },
+    { "icon": "emoji", "percent": 25, "text": "2단계 한국어 설명" },
+    { "icon": "emoji", "percent": 50, "text": "3단계 한국어 설명" },
+    { "icon": "emoji", "percent": 75, "text": "4단계 한국어 설명" },
+    { "icon": "emoji", "percent": 100, "text": "5단계 한국어 D-Day 완성 축하 설명" }
+  ]
+}`;
+
+      const payload = {
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: `${systemPrompt}\n\nUser Concept: "${userConcept}"` }]
+          }
+        ],
+        generationConfig: {
+          responseMimeType: 'application/json',
+          temperature: 0.7
+        }
+      };
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error(`Gemini HTTP ${res.status}`);
+
+      const data = await res.json();
+      const rawJsonText = data.candidates[0].content.parts[0].text;
+      const parsed = JSON.parse(rawJsonText);
+
+      return {
+        id: 'ai-' + Date.now(),
+        title: parsed.storyTitle || userConcept,
+        icon: parsed.stages[0]?.icon || '✨',
+        desc: parsed.storyDesc || `${userConcept} 5단계 성장 스토리`,
+        color: parsed.themeColor || '#ec4899',
+        archetype: parsed.archetype || 'universal',
+        stages: parsed.stages
+      };
+    }
+
+    function generateSmartFallbackTheme(concept) {
+      let title = concept;
+      let icon = '🌟';
+      let color = '#ec4899';
+      let archetype = 'universal';
+      let desc = `${concept}을(를) 향한 5단계 몰입형 애니메이션 스토리`;
+      let stages = [];
+
+      const lower = concept.toLowerCase();
+
+      if (lower.includes('암벽') || lower.includes('등반') || lower.includes('등산') || lower.includes('정상') || lower.includes('클라이밍') || lower.includes('산') || lower.includes('바위')) {
+        title = '암벽등반 정상 정복 스토리';
+        icon = '🧗‍♂️';
+        color = '#f97316';
+        archetype = 'climbing';
+        desc = '베이스캠프 준비부터 오버행 절벽을 지나 정상 정복까지의 5단계 여정!';
+        stages = [
+          { icon: '🧗‍♂️', percent: 0, text: '베이스캠프 & 등반 장비 점검' },
+          { icon: '🧗', percent: 25, text: '암벽 하단 진입 & 첫 홀드 그립' },
+          { icon: '🧗‍♂️', percent: 50, text: '아찔한 오버행 절벽 구간 돌파' },
+          { icon: '🧗', percent: 75, text: '9부 능선 능선 도달 & 마지막 크럭스' },
+          { icon: '🚩', percent: 100, text: '암벽 정상 등정 성공 & 만세 깃발!' }
+        ];
+      } else if (lower.includes('사과') || lower.includes('나무') || lower.includes('식물') || lower.includes('농사')) {
+        title = '사과나무 황금 수확 스토리';
+        icon = '🍎';
+        color = '#ef4444';
+        archetype = 'farming';
+        desc = '비옥한 땅의 씨앗부터 가지가 뻗고 탐스러운 황금 사과 수확까지!';
+        stages = [
+          { icon: '🌰', percent: 0, text: '기름진 땅에 사과 씨앗 심기' },
+          { icon: '🌱', percent: 25, text: '새싹이 돋고 묘목으로 성장' },
+          { icon: '🌳', percent: 50, text: '가지가 뻗고 잎이 무성해짐' },
+          { icon: '🌸', percent: 75, text: '사과꽃이 피고 열매 맺기' },
+          { icon: '🍎', percent: 100, text: '탐스러운 꿀사과 가득 수확!' }
+        ];
+      } else if (lower.includes('마라톤') || lower.includes('달리기') || lower.includes('러닝') || lower.includes('풀코스')) {
+        title = '마라톤 풀코스 완주 스토리';
+        icon = '🏃‍♂️';
+        color = '#3b82f6';
+        archetype = 'marathon';
+        desc = '출발선 긴장감부터 하프 지점 돌파, 감격의 42.195km 피니시 라인!';
+        stages = [
+          { icon: '👟', percent: 0, text: '러닝화 끈 묶고 출발선 정렬' },
+          { icon: '🎽', percent: 25, text: '10km 페이스 유지하며 러닝' },
+          { icon: '💧', percent: 50, text: '21km 하프 지점 돌파' },
+          { icon: '🔥', percent: 75, text: '35km 마의 고비 넘기' },
+          { icon: '🏁', percent: 100, text: '환호 속 42.195km 결승선 완주!' }
+        ];
+      } else if (lower.includes('공부') || lower.includes('시험') || lower.includes('자격증') || lower.includes('합격') || lower.includes('코딩') || lower.includes('개발') || lower.includes('책')) {
+        title = '목표 시험 & 합격 마스터 스토리';
+        icon = '🎓';
+        color = '#6366f1';
+        archetype = 'study';
+        desc = '책상 앞 기초 정리부터 모의고사 만점, 영광의 합격증과 학사모 투척!';
+        stages = [
+          { icon: '📖', percent: 0, text: '교재 1페이지 & 학습 플랜 수립' },
+          { icon: '💡', percent: 25, text: '심야 스탠드 켜고 집중 개념 정리' },
+          { icon: '✍️', percent: 50, text: '기출문제 풀이 & 오답 마스터' },
+          { icon: '💯', percent: 75, text: '실전 모의고사 만점 돌파' },
+          { icon: '🏆', percent: 100, text: '최종 합격증 수령 & 영광의 학사모!' }
+        ];
+      } else if (lower.includes('펭귄') || lower.includes('동물') || lower.includes('바다')) {
+        title = '아기 펭귄의 첫 바다 다이빙';
+        icon = '🐧';
+        color = '#06b6d4';
+        archetype = 'creature';
+        desc = '남극 빙하 속 작은 알에서 태어나 푸른 남극해로 멋지게 다이빙!';
+        stages = [
+          { icon: '🥚', percent: 0, text: '남극 빙하 속 따뜻한 알' },
+          { icon: '🐣', percent: 25, text: '털복숭이 아기 펭귄 탄생' },
+          { icon: '🧊', percent: 50, text: '빙판 미끄럼틀 타며 놀기' },
+          { icon: '🌊', percent: 75, text: '첫 푸른 파도 마주하기' },
+          { icon: '🐋', percent: 100, text: '바다 속 멋진 다이빙 성공!' }
+        ];
+      } else if (lower.includes('저축') || lower.includes('돈') || lower.includes('부자') || lower.includes('재테크')) {
+        title = '1억 모으기 황금 금고 스토리';
+        icon = '💰';
+        color = '#eab308';
+        archetype = 'wealth';
+        desc = '돼지저금통 첫 동전부터 통장 잔고 급상승, 황금 보물 금고 완성!';
+        stages = [
+          { icon: '🐷', percent: 0, text: '돼지저금통에 첫 동전 넣기' },
+          { icon: '📈', percent: 25, text: '차곡차곡 저축 통장 잔고 증식' },
+          { icon: '💎', percent: 50, text: '시드머니 달성 & 투자 보물상자' },
+          { icon: '🏦', percent: 75, text: '골드바 가득 찬 전용 금고' },
+          { icon: '👑', percent: 100, text: '경제적 자유 & 황금 궁전 완성!' }
+        ];
+      } else {
+        title = concept.length > 15 ? concept.substring(0, 15) + '...' : concept;
+        icon = '🚀';
+        color = '#f59e0b';
+        archetype = 'universal';
+        desc = `${concept}을(를) 향한 5단계 몰입형 애니메이션 스토리`;
+        stages = [
+          { icon: '🎯', percent: 0, text: '1단계: 목표 설정 & 준비 단계' },
+          { icon: '⚙️', percent: 25, text: '2단계: 본격적인 실행과 빌드업' },
+          { icon: '🔥', percent: 50, text: '3단계: 열정과 가속도 붙는 단계' },
+          { icon: '🌟', percent: 75, text: '4단계: 한계 돌파 & 완성 임박' },
+          { icon: '🏆', percent: 100, text: '5단계: D-Day 빛나는 완벽한 성공!' }
+        ];
+      }
+
+      return {
+        id: 'ai-' + Date.now(),
+        title: title,
+        icon: icon,
+        desc: desc,
+        color: color,
+        archetype: archetype,
+        stages: stages
+      };
+    }
+
+    function renderAiResultSection(theme) {
+      const section = document.getElementById('aiResultSection');
+      section.classList.remove('hidden');
+
+      document.getElementById('aiResultTitle').textContent = theme.title;
+      document.getElementById('aiResultDesc').textContent = theme.desc;
+
+      // Render Stage Buttons Grid
+      const grid = document.getElementById('aiStageCardsGrid');
+      grid.innerHTML = theme.stages.map((st, idx) => `
+        <button type="button" onclick="setAiPreviewStage(${idx + 1})" 
+                id="aiStageBtn-${idx + 1}"
+                class="p-3 rounded-xl themed-inner border text-center transition-all ${idx === 0 ? 'border-amber-400 bg-amber-400/10 scale-105' : 'border-transparent'}">
+          <div class="text-2xl mb-1">${st.icon}</div>
+          <div class="text-xs font-bold text-white">${idx + 1}단계</div>
+          <div class="text-[10px] themed-subtext line-clamp-1 mt-0.5">${st.text}</div>
+          <div class="text-[9px] opacity-60 font-mono mt-1">${st.percent}%</div>
+        </button>
+      `).join('');
+
+      aiPreviewStage = 1;
+      updateAiCanvasStageName(1);
+
+      // Force instant canvas resizing so canvas width/height is never 0
+      handleAiPreviewCanvasResize();
+      setTimeout(handleAiPreviewCanvasResize, 50);
+
+      // Smooth scroll to preview section
+      section.scrollIntoView({ behavior: 'smooth' });
+      playCrystalBell();
+    }
+
+    function setAiPreviewStage(stageNum) {
+      aiPreviewStage = stageNum;
+      updateAiCanvasStageName(stageNum);
+
+      // Highlight active preview button
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`aiStageBtn-${i}`);
+        if (btn) {
+          if (i === stageNum) {
+            btn.className = 'p-3 rounded-xl themed-inner border border-amber-400 bg-amber-400/10 scale-105 text-center transition-all';
+          } else {
+            btn.className = 'p-3 rounded-xl themed-inner border border-transparent text-center transition-all opacity-75';
+          }
+        }
+      }
+      playToneFeedback(500 + stageNum * 60, 0.05);
+    }
+
+    function updateAiCanvasStageName(stageNum) {
+      const badge = document.getElementById('aiCanvasStageName');
+      if (!badge || !state.tempAiGeneratedTheme) return;
+      const st = state.tempAiGeneratedTheme.stages[stageNum - 1];
+      badge.textContent = `${stageNum}단계: ${st ? st.text : ''}`;
+    }
+
+    function applyAiThemeToNewAlarm() {
+      if (!state.tempAiGeneratedTheme) return;
+
+      const aiTheme = state.tempAiGeneratedTheme;
+
+      // Save to AI themes collection if not already present
+      if (!state.aiThemes.find(t => t.id === aiTheme.id)) {
+        state.aiThemes.unshift(aiTheme);
+        saveAiThemes();
+      }
+
+      // Pre-fill Alarm Form
+      document.getElementById('formTitle').value = aiTheme.title;
+      document.getElementById('formMemo').value = aiTheme.desc;
+
+      renderThemeSelectionList(aiTheme.id);
+      switchTab('create');
+      playToneFeedback(600, 0.1);
+      alert('✨ AI 테마가 선택되었습니다! 일자를 설정하고 [알람 시작하기]를 눌러주세요.');
+    }
+
+
+    /* ==========================================================
+       14. GEMINI API KEY MODAL
+       ========================================================== */
+    function openApiKeyModal() {
+      const savedKey = localStorage.getItem(STORAGE_KEYS.API_KEY) || '';
+      document.getElementById('geminiApiKeyInput').value = savedKey;
+      document.getElementById('apiKeyModal').classList.remove('hidden');
+    }
+
+    function closeApiKeyModal() {
+      document.getElementById('apiKeyModal').classList.add('hidden');
+    }
+
+    function saveGeminiApiKey() {
+      const key = document.getElementById('geminiApiKeyInput').value.trim();
+      if (key) {
+        localStorage.setItem(STORAGE_KEYS.API_KEY, key);
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.API_KEY);
+      }
+      updateApiKeyStatus();
+      closeApiKeyModal();
+      playCrystalBell();
+      alert('Gemini API 키 설정이 저장되었습니다!');
+    }
+
+    function updateApiKeyStatus() {
+      const key = localStorage.getItem(STORAGE_KEYS.API_KEY);
+      const dot = document.getElementById('apiKeyStatusDot');
+      if (dot) {
+        if (key && key.startsWith('AIzaSy')) {
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-sm';
+          dot.title = 'Gemini API 활성화됨';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          dot.title = '스마트 AI 내장 엔진 모드';
+        }
+      }
+    }
+
+
+    /* ==========================================================
+       15. HELPER UTILITY FUNCTIONS
+       ========================================================= */
+    function getThemeById(themeId) {
+      return [...BUILTIN_PRESETS, ...state.aiThemes].find(t => t.id === themeId) || BUILTIN_PRESETS[0];
+    }
+
+    function getCategoryWithIcon(cat) {
+      if (cat === '목표/시험') return '🎯 목표/시험';
+      if (cat === '당일 일정/약속') return '⏰ 당일 일정';
+      if (cat === '운동/습관 형성') return '🏃 운동/습관';
+      return '🎉 기념일/이벤트';
+    }
+
+    function formatDateSimple(d) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+  </script>
+
+</body>
+</html>
