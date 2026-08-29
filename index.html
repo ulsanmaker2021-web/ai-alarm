@@ -1037,7 +1037,7 @@
 
       <div class="space-y-4 text-xs">
         <p class="themed-subtext leading-relaxed">
-          Google AI Studio에서 발급받은 Gemini API 키를 입력하시면, <strong class="text-white">Gemini Flash 모델</strong>로 무제한 5단계 스토리를 생성할 수 있습니다. 키는 브라우저 <code class="bg-black/30 px-1 py-0.5 rounded">localStorage</code>에만 안전하게 보관됩니다.
+          본인의 Gemini API 키를 입력하면 Gemini Flash로 테마를 생성할 수 있습니다. 사용량과 비용은 입력한 키의 소유자에게 적용됩니다. 키는 이 브라우저의 <code class="bg-black/30 px-1 py-0.5 rounded">localStorage</code>에 저장되므로 공용 기기에서는 사용하지 마세요.
         </p>
 
         <div class="space-y-1.5">
@@ -1050,7 +1050,7 @@
         </div>
 
         <div class="text-[11px] themed-subtext">
-          <span class="font-bold text-amber-400">💡 팁:</span> API 키가 없어도 내장된 스마트 AI 테마 엔진을 통해 자유롭게 테스트할 수 있습니다!
+          <span class="font-bold text-amber-400">⚠️ 보안:</span> 운영 웹앱의 브라우저 저장소는 비밀 저장소가 아닙니다. 키 없이도 비용 없는 내장 테마 생성기를 사용할 수 있습니다.
         </div>
 
         <div class="flex items-center justify-end gap-2 pt-2 border-t themed-border">
@@ -1316,7 +1316,8 @@
       isAudioMuted: false,
       activeAlarmAudioNode: null,
       tempAiGeneratedTheme: null,
-      isCelebrationActive: false
+      isCelebrationActive: false,
+      ringingAlarmId: null
     };
 
     // Canvas & Animation References
@@ -1749,6 +1750,12 @@
       updateStageStepHighlights(metrics.stage);
 
       // Check if newly reached alarm: activate 5th stage celebration mode without blocking dark modal
+      const targetTimeReached = Date.now() >= new Date(state.activeAlarm.targetDate).getTime();
+      if (targetTimeReached && state.ringingAlarmId !== state.activeAlarm.id) {
+        state.ringingAlarmId = state.activeAlarm.id;
+        triggerAlarmModal(state.activeAlarm, metrics);
+      }
+
       if (metrics.isReached) {
         if (!state.isCelebrationActive) {
           activateCelebrationMode();
@@ -1937,8 +1944,20 @@
       const startDate = document.getElementById('editAlarmStartDateInput').value;
       const memo = document.getElementById('editAlarmMemoInput').value.trim();
 
-      const targetIso = new Date(`${targetDate}T${targetTime}:00`).toISOString();
-      const startIso = startDate ? new Date(`${startDate}T00:00:00`).toISOString() : state.activeAlarm.startDate;
+      const targetDateObject = parseLocalDateTime(targetDate, targetTime);
+      const startDateObject = startDate ? parseLocalDateTime(startDate, '00:00') : new Date(state.activeAlarm.startDate);
+
+      if (!targetDateObject || !startDateObject || Number.isNaN(startDateObject.getTime())) {
+        alert('올바른 시작일과 목표 일시를 입력해주세요.');
+        return;
+      }
+      if (startDateObject.getTime() > targetDateObject.getTime()) {
+        alert('시작일은 목표 일시보다 늦을 수 없습니다.');
+        return;
+      }
+
+      const targetIso = targetDateObject.toISOString();
+      const startIso = startDateObject.toISOString();
 
       state.activeAlarm.title = title;
       state.activeAlarm.category = category;
@@ -1946,6 +1965,7 @@
       state.activeAlarm.startDate = startIso;
       state.activeAlarm.memo = memo;
       state.virtualProgressBoost = 0;
+      state.ringingAlarmId = null;
 
       saveActiveAlarm();
       renderActiveAlarmView();
@@ -2029,10 +2049,11 @@
       if (!state.activeAlarm) return;
       deactivateCelebrationMode();
       const currentTarget = new Date(state.activeAlarm.targetDate).getTime();
-      const newTarget = new Date(currentTarget + mins * 60 * 1000);
+      const newTarget = new Date(Math.max(Date.now(), currentTarget) + mins * 60 * 1000);
       
       state.activeAlarm.targetDate = newTarget.toISOString();
       state.virtualProgressBoost = 0; // reset boost
+      state.ringingAlarmId = null;
       saveActiveAlarm();
       renderActiveAlarmView();
       playToneFeedback(480, 0.15);
@@ -2067,12 +2088,13 @@
         isCompleted: false
       };
       state.virtualProgressBoost = 0;
+      state.ringingAlarmId = null;
       saveActiveAlarm();
 
       renderActiveAlarmView();
       triggerConfettiParticles(60);
       playCrystalBell();
-      alert('🎉 알람이 히스토리에 저장되었으며, 익일 동시각으로 새롭게 리셋되었습니다!');
+      alert('🎉 알람이 히스토리에 저장되었으며, 익일 오전 9시로 새롭게 리셋되었습니다!');
     }
 
     function triggerAlarmModal(alarm, metrics) {
@@ -3836,8 +3858,20 @@
       const themeId = document.querySelector('input[name="formThemeId"]:checked').value;
       const memo = document.getElementById('formMemo').value.trim();
 
-      const targetIso = new Date(`${targetDate}T${targetTime}:00`).toISOString();
-      const startIso = startDate ? new Date(`${startDate}T00:00:00`).toISOString() : new Date().toISOString();
+      const targetDateObject = parseLocalDateTime(targetDate, targetTime);
+      const startDateObject = startDate ? parseLocalDateTime(startDate, '00:00') : new Date();
+
+      if (!targetDateObject || !startDateObject) {
+        alert('올바른 시작일과 목표 일시를 입력해주세요.');
+        return;
+      }
+      if (startDateObject.getTime() > targetDateObject.getTime()) {
+        alert('시작일은 목표 일시보다 늦을 수 없습니다.');
+        return;
+      }
+
+      const targetIso = targetDateObject.toISOString();
+      const startIso = startDateObject.toISOString();
 
       state.activeAlarm = {
         id: 'alarm-' + Date.now(),
@@ -3853,6 +3887,7 @@
       };
 
       state.virtualProgressBoost = 0;
+      state.ringingAlarmId = null;
       saveActiveAlarm();
       renderActiveAlarmView();
       switchTab('active');
@@ -4004,7 +4039,7 @@
     }
 
     async function callGeminiApi(apiKey, userConcept) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
       const systemPrompt = `You are an expert creative storyteller and game designer.
 Create an inspiring 5-stage D-Day countdown progress theme based on the user's concept.
@@ -4038,7 +4073,10 @@ Return strictly valid JSON matching this schema:
 
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
         body: JSON.stringify(payload)
       });
 
@@ -4311,7 +4349,28 @@ Return strictly valid JSON matching this schema:
       const pad = n => String(n).padStart(2, '0');
       return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
+
+    function parseLocalDateTime(dateValue, timeValue = '00:00') {
+      const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue || '');
+      const timeMatch = /^(\d{2}):(\d{2})$/.exec(timeValue || '');
+      if (!dateMatch || !timeMatch) return null;
+
+      const [, yearText, monthText, dayText] = dateMatch;
+      const [, hourText, minuteText] = timeMatch;
+      const year = Number(yearText);
+      const month = Number(monthText);
+      const day = Number(dayText);
+      const hour = Number(hourText);
+      const minute = Number(minuteText);
+      const parsed = new Date(year, month - 1, day, hour, minute, 0, 0);
+
+      if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 ||
+          parsed.getDate() !== day || parsed.getHours() !== hour ||
+          parsed.getMinutes() !== minute) return null;
+      return parsed;
+    }
   </script>
 
 </body>
 </html>
+
