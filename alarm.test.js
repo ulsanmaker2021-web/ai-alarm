@@ -185,3 +185,38 @@ test('편집에서도 시작일이 목표일보다 늦으면 기존 알람을 �
   assert.match(alerts[0] || '', /시작일.*목표/);
 });
 
+test('코끼리 성장 문장은 아기부터 성체까지 5단계 이야기로 생성한다', () => {
+  const { context } = loadApp();
+  const theme = vm.runInContext(
+    `generateSmartFallbackTheme('어린코끼리를 어른 코끼리로 키우기')`,
+    context
+  );
+
+  assert.equal(theme.archetype, 'elephant');
+  assert.equal(theme.stages.length, 5);
+  assert.deepEqual(
+    Array.from(theme.stages, stage => stage.percent),
+    [0, 25, 50, 75, 100]
+  );
+  assert.match(theme.stages[0].text, /아기 코끼리/);
+  assert.match(theme.stages[4].text, /어른 코끼리/);
+});
+
+test('코끼리 테마는 범용 장면 대신 코끼리 성장 장면을 그린다', () => {
+  const { context } = loadApp();
+  vm.runInContext(`
+    let elephantDrawCount = 0;
+    let universalDrawCount = 0;
+    drawElephantGrowthScene = () => { elephantDrawCount += 1; };
+    drawUniversalAdaptiveScene = () => { universalDrawCount += 1; };
+    drawAiDynamicScene(
+      {}, { title: '어린코끼리를 어른 코끼리로 키우기', desc: '', archetype: 'elephant' },
+      3, 640, 300, 0
+    );
+  `, context);
+
+  assert.equal(vm.runInContext('elephantDrawCount', context), 1);
+  assert.equal(vm.runInContext('universalDrawCount', context), 0);
+});
+
+
