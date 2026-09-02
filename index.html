@@ -929,6 +929,9 @@
             <p id="aiResultDesc" class="text-xs sm:text-sm themed-subtext mt-1">
               스토리 설명이 여기에 표시됩니다.
             </p>
+            <span id="aiGenerationModeBadge" class="inline-flex mt-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-700/70 text-slate-300">
+              생성 방식 확인 중
+            </span>
           </div>
 
           <!-- Quick Action: Apply to Alarm -->
@@ -3604,6 +3607,80 @@
       }
     }
 
+    // 🐘 Elephant Growth Scene Engine
+    function drawElephantGrowthScene(ctx, stage, progress, cx, cy, w, h, time) {
+      const t = time * 0.002;
+      const groundY = h * 0.78;
+      const stageIdx = Math.min(4, Math.max(0, stage - 1));
+      const scale = [0.48, 0.62, 0.78, 0.94, 1.08][stageIdx];
+      const sway = Math.sin(t * 3) * 3;
+
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#7dd3fc');
+      sky.addColorStop(1, '#fef3c7');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#84cc16';
+      ctx.fillRect(0, groundY, w, h - groundY);
+
+      ctx.save();
+      ctx.translate(cx, groundY - 10);
+      ctx.scale(scale, scale);
+      ctx.translate(0, sway);
+
+      ctx.fillStyle = stageIdx < 2 ? '#94a3b8' : '#64748b';
+      ctx.beginPath();
+      ctx.ellipse(-12, -62, 72, 48, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillRect(-58, -42, 18, 48);
+      ctx.fillRect(12, -42, 18, 48);
+
+      ctx.beginPath();
+      ctx.arc(55, -74, 43, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = stageIdx < 2 ? '#a8b4c4' : '#78869a';
+      ctx.beginPath();
+      ctx.ellipse(32, -78, 34, 42, -0.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = stageIdx < 2 ? '#94a3b8' : '#64748b';
+      ctx.lineWidth = 18;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(82, -70);
+      ctx.quadraticCurveTo(104, -35, 88 + sway, -5);
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(69, -84, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (stageIdx >= 3) {
+        ctx.fillStyle = '#fff7ed';
+        ctx.beginPath();
+        ctx.moveTo(79, -64);
+        ctx.quadraticCurveTo(103, -57, 91, -39);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      if (stageIdx === 4) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.moveTo(35, -119);
+        ctx.lineTo(47, -139);
+        ctx.lineTo(60, -119);
+        ctx.lineTo(72, -139);
+        ctx.lineTo(84, -119);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
     // 💰 6. Wealth / Savings Scene Engine
     function drawWealthSavingsScene(ctx, stage, progress, cx, cy, w, h, time) {
       const t = time * 0.002;
@@ -3687,6 +3764,8 @@
         drawMarathonSportsScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
       } else if (textCorpus.includes('사과') || textCorpus.includes('나무') || textCorpus.includes('농사') || textCorpus.includes('식물') || textCorpus.includes('수확') || textCorpus.includes('과일') || textCorpus.includes('tree') || textCorpus.includes('plant')) {
         drawFarmingGrowthScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
+      } else if (textCorpus.includes('코끼리') || textCorpus.includes('elephant')) {
+        drawElephantGrowthScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
       } else if (textCorpus.includes('펭귄') || textCorpus.includes('동물') || textCorpus.includes('바다') || textCorpus.includes('새') || textCorpus.includes('penguin') || textCorpus.includes('animal')) {
         drawCreatureAdventureScene(ctx, stage, metrics.progress, cx, cy, w, h, time);
       } else if (textCorpus.includes('저축') || textCorpus.includes('돈') || textCorpus.includes('부자') || textCorpus.includes('재테크') || textCorpus.includes('money') || textCorpus.includes('wealth')) {
@@ -4019,10 +4098,12 @@
         if (apiKey && apiKey.startsWith('AIzaSy')) {
           // Call Real Gemini API (gemini-2.5-flash)
           themeResult = await callGeminiApi(apiKey, concept);
+          themeResult.generationMode = 'gemini';
         } else {
           // Smart Offline Fallback Generator
           await new Promise(r => setTimeout(r, 800)); // realistic thinking delay
           themeResult = generateSmartFallbackTheme(concept);
+          themeResult.generationMode = 'offline';
         }
 
         state.tempAiGeneratedTheme = themeResult;
@@ -4031,6 +4112,7 @@
       } catch (err) {
         console.error('Gemini Generation error:', err);
         const fallback = generateSmartFallbackTheme(concept);
+        fallback.generationMode = 'fallback';
         state.tempAiGeneratedTheme = fallback;
         renderAiResultSection(fallback);
       } finally {
@@ -4049,7 +4131,7 @@ Return strictly valid JSON matching this schema:
   "storyTitle": "Short title in Korean (max 18 chars)",
   "storyDesc": "Inspiring summary in Korean (max 40 chars)",
   "themeColor": "#hexColor",
-  "archetype": "climbing | study | marathon | farming | creature | wealth | universal",
+  "archetype": "climbing | study | marathon | farming | creature | elephant | wealth | universal",
   "stages": [
     { "icon": "emoji", "percent": 0, "text": "1단계 한국어 설명" },
     { "icon": "emoji", "percent": 25, "text": "2단계 한국어 설명" },
@@ -4160,6 +4242,19 @@ Return strictly valid JSON matching this schema:
           { icon: '💯', percent: 75, text: '실전 모의고사 만점 돌파' },
           { icon: '🏆', percent: 100, text: '최종 합격증 수령 & 영광의 학사모!' }
         ];
+      } else if (lower.includes('코끼리') || lower.includes('elephant')) {
+        title = '아기 코끼리의 성장 이야기';
+        icon = '🐘';
+        color = '#64748b';
+        archetype = 'elephant';
+        desc = '호기심 많은 아기 코끼리가 초원을 배우며 듬직한 어른 코끼리로 성장합니다.';
+        stages = [
+          { icon: '🐘', percent: 0, text: '작고 호기심 많은 아기 코끼리 탄생' },
+          { icon: '🍼', percent: 25, text: '엄마 곁에서 걷기와 물 마시기 배우기' },
+          { icon: '🌿', percent: 50, text: '어린 코끼리로 자라 초원 탐험하기' },
+          { icon: '🌳', percent: 75, text: '튼튼한 청년 코끼리와 상아 성장' },
+          { icon: '👑', percent: 100, text: '무리를 이끄는 듬직한 어른 코끼리 완성' }
+        ];
       } else if (lower.includes('펭귄') || lower.includes('동물') || lower.includes('바다')) {
         title = '아기 펭귄의 첫 바다 다이빙';
         icon = '🐧';
@@ -4218,6 +4313,15 @@ Return strictly valid JSON matching this schema:
 
       document.getElementById('aiResultTitle').textContent = theme.title;
       document.getElementById('aiResultDesc').textContent = theme.desc;
+      const modeBadge = document.getElementById('aiGenerationModeBadge');
+      if (modeBadge) {
+        const modeLabels = {
+          gemini: '✨ Gemini AI 생성',
+          offline: '🧩 내장 오프라인 생성',
+          fallback: '⚠️ Gemini 오류 · 내장 생성'
+        };
+        modeBadge.textContent = modeLabels[theme.generationMode] || '🧩 내장 생성';
+      }
 
       // Render Stage Buttons Grid
       const grid = document.getElementById('aiStageCardsGrid');
